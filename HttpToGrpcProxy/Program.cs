@@ -1,7 +1,11 @@
 
+using HttpToGrpcProxy.Services;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.AddSingleton<ProxyService>();
+builder.Services.AddGrpc();
 
 builder.Services.AddControllers();
 
@@ -13,10 +17,12 @@ if (builder.Environment.IsDevelopment())
     app.UseDeveloperExceptionPage();
 }
 
-app.UseHttpsRedirection();
+// app.UseHttpsRedirection();
 
-app.UseAuthorization();
+// app.UseAuthorization();
 
 app.MapControllers();
+app.UseRouting();
+app.MapGrpcService<ProxyService>();
 
 app.Run();

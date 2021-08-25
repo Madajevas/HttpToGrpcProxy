@@ -1,3 +1,16 @@
 syntax = "proto3";
 
 option csharp_namespace = "HttpToGrpcProxy";
+
+service Proxy {
+    rpc OnMessage (stream Response) returns (stream Request);
+}
+
+message Request {
+    string route = 1;
+    string method = 2;
+}
+
+message Response {
+    string route = 1;
+}
