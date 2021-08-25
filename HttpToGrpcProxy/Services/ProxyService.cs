@@ -1,10 +1,20 @@
 ﻿
 using Grpc.Core;
 
+using System.Collections.Concurrent;
+
 namespace HttpToGrpcProxy.Services;
+
+/// <summary>
+/// Intenden for single client
+/// </summary>
 public class ProxyService : Proxy.ProxyBase
 {
     private readonly ILogger<ProxyService> logger;
+
+    private IAsyncStreamWriter<Request> responseStream;
+
+    private ConcurrentDictionary<string, TaskCompletionSource<Response>> promises = new ConcurrentDictionary<string, TaskCompletionSource<Response>>();
 
     public ProxyService(ILogger<ProxyService> logger)
     {
@@ -13,28 +23,47 @@ public class ProxyService : Proxy.ProxyBase
 
     public override Task OnMessage(IAsyncStreamReader<Response> requestStream, IServerStreamWriter<Request> responseStream, ServerCallContext context)
     {
-        var readerTask = Receive(requestStream, context);
+        this.responseStream = responseStream;
 
-        var writerTask = Send(responseStream);
-
-        return Task.WhenAll(readerTask, writerTask);
+        return InitReader(requestStream, context);
     }
 
-    private async Task Send(IAsyncStreamWriter<Request> responseStream)
+    public async Task<Response> ForwardRequest(Request request)
     {
-        while (true)
+        if (responseStream == null) // TODO: what if client disconnects?
         {
-            await responseStream.WriteAsync(new Request { Route = "/request" });
-            await Task.Delay(2000);
+            throw new ArgumentNullException("No client connected");
         }
+
+        logger.LogInformation("Request received {Request}", request);
+
+        var tsc = new TaskCompletionSource<Response>();
+        promises[request.Route] = tsc;
+
+        await responseStream.WriteAsync(request);
+
+        return await tsc.Task;
     }
 
-    private async Task Receive(IAsyncStreamReader<Response> requestStream, ServerCallContext context)
+    private async Task InitReader(IAsyncStreamReader<Response> requestStream, ServerCallContext context)
     {
         while (await requestStream.MoveNext() && !context.CancellationToken.IsCancellationRequested)
         {
             var message = requestStream.Current;
-            logger.LogInformation("Request received {Request}", message);
+            logger.LogInformation("Response received {Response}", message);
+
+            EnsureWaitingForResponse(message.Route).SetResult(message);
         }
+    }
+
+    private TaskCompletionSource<Response> EnsureWaitingForResponse(string route)
+    {
+        if (!promises.ContainsKey(route))
+        {
+            // TODO: used promises should be discarded
+            promises[route] = new TaskCompletionSource<Response>();
+        }
+
+        return promises[route];
     }
 }

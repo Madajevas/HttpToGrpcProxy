@@ -1,13 +1,17 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using HttpToGrpcProxy.Services;
+
+using Microsoft.AspNetCore.Mvc;
 
 namespace HttpToGrpcProxy.Controllers;
 [ApiController]
 public class EverythingController : ControllerBase
 {
+    private readonly ProxyService proxy;
     private readonly ILogger<EverythingController> _logger;
 
-    public EverythingController(ILogger<EverythingController> logger)
+    public EverythingController(ProxyService proxy, ILogger<EverythingController> logger)
     {
+        this.proxy = proxy;
         _logger = logger;
     }
 

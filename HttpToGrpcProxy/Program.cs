@@ -7,7 +7,9 @@ using System.Net;
 
 public class Program
 {
-    public static void Main(string[] args)
+    public static WebApplication app;
+
+    public static async Task Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
 
@@ -26,7 +28,9 @@ public class Program
 
         builder.Services.AddControllers();
 
-        var app = builder.Build();
+        app = builder.Build();
+
+        await Task.Yield();
 
         // Configure the HTTP request pipeline.
         if (builder.Environment.IsDevelopment())
