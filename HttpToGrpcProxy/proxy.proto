@@ -9,8 +9,10 @@ service Proxy {
 message Request {
     string route = 1;
     string method = 2;
+    string body = 3;
 }
 
 message Response {
     string route = 1;
+    string body = 2;
 }

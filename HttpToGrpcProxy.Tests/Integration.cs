@@ -48,15 +48,17 @@ namespace HttpToGrpcProxy.Tests
         {
             var tsk = grpc.WaitOnRoute("everything/weatherforecast");
 
-            var restRequest = new RestRequest("/everything/weatherforecast", Method.GET);
-
+            var restRequest = new RestRequest("/everything/weatherforecast", Method.POST);
+            restRequest.AddJsonBody("testing");
             var b = httpClient.ExecuteAsync(restRequest);
+
+   
 
             var requestContext = await tsk;
 
-            Assert.That(requestContext.Request.Method.ToString(), Is.EqualTo("GET"));
+            // Assert.That(requestContext.Request.Method.ToString(), Is.EqualTo("GET"));
 
-            await requestContext.Respond(new Response { });
+            await requestContext.Respond(new Response { Body = "i respond" });
 
             var res = await b;
 

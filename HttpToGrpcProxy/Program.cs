@@ -53,10 +53,14 @@ public class Program
         {
             var proxy = context.RequestServices.GetService<ProxyService>();
         
-            var request = new Request { Route = context.Request.RouteValues["route"].ToString(), Method = context.Request.Method };
+            var request = new Request {
+                Route = context.Request.RouteValues["route"].ToString(),
+                Method = context.Request.Method,
+                Body = await new StreamReader(context.Request.Body).ReadToEndAsync() // TODO: if post
+            };
             var response = await proxy.ForwardRequest(request);
-        
-            var body = System.Text.Json.JsonSerializer.Serialize(new { Route = context.Request.RouteValues["route"], Method = context.Request.Method });
+
+            var body = System.Text.Json.JsonSerializer.Serialize(new { Route = context.Request.RouteValues["route"], Method = context.Request.Method, Body = response.Body });
             await context.Response.WriteAsync(body);
             await context.Response.CompleteAsync();
         }));
