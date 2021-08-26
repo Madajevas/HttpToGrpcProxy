@@ -48,38 +48,61 @@ namespace HttpToGrpcProxy.Tests
         {
             var tsk = grpc.WaitOnRoute("everything/weatherforecast");
 
-            var request = new RestRequest("/everything/weatherforecast", Method.GET);
+            var restRequest = new RestRequest("/everything/weatherforecast", Method.GET);
 
-            var b = httpClient.ExecuteAsync(request);
+            var b = httpClient.ExecuteAsync(restRequest);
 
-            var a = await tsk;
+            var requestContext = await tsk;
 
-            // b = httpClient.Execute(request);
+            Assert.That(requestContext.Request.Method.ToString(), Is.EqualTo("GET"));
 
-            // var a = await httpClient.GetAsync<string>(new RestRequest(new Uri("http://localhost:5001/makaronai")));
+            await requestContext.Respond(new Response { });
 
-            // await Task.Delay(25000);
-
-
-
+            var res = await b;
 
             Assert.Pass();
         }
     }
 
+    class ResponseContext
+    {
+        private readonly IClientStreamWriter<Response> clientStreamWriter;
+
+        public Request Request { get; }
+
+        public ResponseContext(Request request, IClientStreamWriter<Response> clientStreamWriter)
+        {
+            Request = request;
+            this.clientStreamWriter = clientStreamWriter;
+        }
+
+        public async Task Respond(Response response)
+        {
+            if (string.IsNullOrWhiteSpace(response.Route))
+            {
+                response.Route = Request.Route;
+            }
+
+            await clientStreamWriter.WriteAsync(response);
+        }
+    }
+
     class MyClient
     {
-        private ConcurrentDictionary<string, TaskCompletionSource<Request>> promises = new ConcurrentDictionary<string, TaskCompletionSource<Request>>();
+        private ConcurrentDictionary<string, TaskCompletionSource<ResponseContext>> promises = new ConcurrentDictionary<string, TaskCompletionSource<ResponseContext>>();
+
+        private AsyncDuplexStreamingCall<Response, Request> handle;
 
         public MyClient(Proxy.ProxyClient proxy)
         {
-            var handle = proxy.OnMessage();
+            handle = proxy.OnMessage();
+
             InitReader(handle.ResponseStream);
         }
 
-        public Task<Request> WaitOnRoute(string route)
+        public Task<ResponseContext> WaitOnRoute(string route)
         {
-            var tsc = new TaskCompletionSource<Request>();
+            var tsc = new TaskCompletionSource<ResponseContext>();
             promises[route] = tsc;
 
             return tsc.Task;
@@ -92,7 +115,7 @@ namespace HttpToGrpcProxy.Tests
                 var message = responseStream.Current;
                 // logger.LogInformation("Request received {Response}", message);
 
-                promises[message.Route].SetResult(message);
+                promises[message.Route].SetResult(new ResponseContext(message, handle.RequestStream));
             }
         }
     }
