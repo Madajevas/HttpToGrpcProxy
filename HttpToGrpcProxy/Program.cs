@@ -1,4 +1,5 @@
 
+using HttpToGrpcProxy;
 using HttpToGrpcProxy.Services;
 
 using Microsoft.AspNetCore.Server.Kestrel.Core;
@@ -26,6 +27,7 @@ public class Program
         builder.Services.AddSingleton<ProxyService>();
         builder.Services.AddGrpc();
 
+        builder.Services.AddRouting();
         builder.Services.AddControllers();
 
         app = builder.Build();
@@ -42,10 +44,22 @@ public class Program
 
         // app.UseAuthorization();
 
-        app.MapControllers();
         app.UseRouting();
+        // app.MapControllers().RequireHost($"*:5000");
+        // app.MapDefaultControllerRoute();
+        // app.MapControllerRoute("everyting", "{**route}");
 
-
+        app.UseEndpoints(endpoints => endpoints.Map("{**route}", async context =>
+        {
+            var proxy = context.RequestServices.GetService<ProxyService>();
+        
+            var request = new Request { Route = context.Request.RouteValues["route"].ToString(), Method = context.Request.Method };
+            var response = await proxy.ForwardRequest(request);
+        
+            var body = System.Text.Json.JsonSerializer.Serialize(new { Route = context.Request.RouteValues["route"], Method = context.Request.Method });
+            await context.Response.WriteAsync(body);
+            await context.Response.CompleteAsync();
+        }));
 
         app.MapGrpcService<ProxyService>().RequireHost($"*:6000");
 
