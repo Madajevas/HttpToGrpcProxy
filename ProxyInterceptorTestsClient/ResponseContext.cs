@@ -3,6 +3,7 @@
 using HttpToGrpcProxy;
 
 using System.Threading.Tasks;
+using System.Text.Json;
 
 namespace ProxyInterceptorTestsClient
 {
@@ -26,6 +27,11 @@ namespace ProxyInterceptorTestsClient
             }
 
             await clientStreamWriter.WriteAsync(response);
+        }
+
+        public T Bind<T>()
+        {
+            return JsonSerializer.Deserialize<T>(Request.Body);
         }
     }
 }
