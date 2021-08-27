@@ -1,5 +1,4 @@
-﻿
-using Grpc.Core;
+﻿using Grpc.Core;
 
 using System.Collections.Concurrent;
 
@@ -15,6 +14,19 @@ class ProxyService : Proxy.ProxyBase
     private IAsyncStreamWriter<Request> responseStream;
 
     private ConcurrentDictionary<string, TaskCompletionSource<Response>> promises = new ConcurrentDictionary<string, TaskCompletionSource<Response>>();
+
+    private TaskCompletionSource<Response> this[string route]
+    {
+        get
+        {
+            if (!promises.ContainsKey(route))
+            {
+                promises[route] = new TaskCompletionSource<Response>();
+            }
+
+            return promises[route];
+        }
+    }
 
     public ProxyService(ILogger<ProxyService> logger)
     {
@@ -37,12 +49,9 @@ class ProxyService : Proxy.ProxyBase
 
         logger.LogInformation("Request received {Request}", request);
 
-        var tsc = new TaskCompletionSource<Response>();
-        promises[request.Route] = tsc;
-
         await responseStream.WriteAsync(request);
 
-        return await tsc.Task;
+        return await this[request.Route].Task;
     }
 
     private async Task InitReader(IAsyncStreamReader<Response> requestStream, ServerCallContext context)
@@ -52,18 +61,7 @@ class ProxyService : Proxy.ProxyBase
             var message = requestStream.Current;
             logger.LogInformation("Response received {Response}", message);
 
-            EnsureWaitingForResponse(message.Route).SetResult(message);
+            this[message.Route].SetResult(message);
         }
-    }
-
-    private TaskCompletionSource<Response> EnsureWaitingForResponse(string route)
-    {
-        if (!promises.ContainsKey(route))
-        {
-            // TODO: used promises should be discarded
-            promises[route] = new TaskCompletionSource<Response>();
-        }
-
-        return promises[route];
     }
 }
