@@ -8,7 +8,7 @@ namespace HttpToGrpcProxy.Services;
 /// <summary>
 /// Intenden for single client
 /// </summary>
-public class ProxyService : Proxy.ProxyBase
+class ProxyService : Proxy.ProxyBase
 {
     private readonly ILogger<ProxyService> logger;
 

@@ -14,13 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Protobuf Include="proxy.proto" GrpcServices="Server" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
-      <_Parameter1>HttpToGrpcProxy.Tests</_Parameter1>
-    </AssemblyAttribute>
+    <Protobuf Include="proxy.proto" GrpcServices="Server" Access="Internal" />
   </ItemGroup>
 
 </Project>

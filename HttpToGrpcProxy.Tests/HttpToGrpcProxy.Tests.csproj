@@ -25,12 +25,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\HttpToGrpcProxy\HttpToGrpcProxy.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Protobuf Include="..\HttpToGrpcProxy\proxy.proto" GrpcServices="Client">
-      <Link>Protos\proxy.proto</Link>
-    </Protobuf>
+    <ProjectReference Include="..\ProxyInterceptorTestsClient\ProxyInterceptorTestsClient.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,4 +1,3 @@
-
 using HttpToGrpcProxy;
 using HttpToGrpcProxy.Services;
 
@@ -8,9 +7,12 @@ using System.Net;
 
 public class Program
 {
-    public static WebApplication app;
+    public static Task Main(string[] args)
+    {
+        return CreateApplication(args).RunAsync();
+    }
 
-    public static async Task Main(string[] args)
+    public static WebApplication CreateApplication(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
 
@@ -30,9 +32,7 @@ public class Program
         builder.Services.AddRouting();
         builder.Services.AddControllers();
 
-        app = builder.Build();
-
-        await Task.Yield();
+        var app = builder.Build();
 
         // Configure the HTTP request pipeline.
         if (builder.Environment.IsDevelopment())
@@ -40,33 +40,28 @@ public class Program
             app.UseDeveloperExceptionPage();
         }
 
-        // app.UseHttpsRedirection();
-
-        // app.UseAuthorization();
-
         app.UseRouting();
-        // app.MapControllers().RequireHost($"*:5000");
-        // app.MapDefaultControllerRoute();
-        // app.MapControllerRoute("everyting", "{**route}");
 
         app.UseEndpoints(endpoints => endpoints.Map("{**route}", async context =>
         {
             var proxy = context.RequestServices.GetService<ProxyService>();
-        
-            var request = new Request {
+
+            var request = new Request
+            {
                 Route = context.Request.RouteValues["route"].ToString(),
                 Method = context.Request.Method,
-                Body = await new StreamReader(context.Request.Body).ReadToEndAsync() // TODO: if post
+                // Body = await new StreamReader(context.Request.Body).ReadToEndAsync() // TODO: if post
             };
             var response = await proxy.ForwardRequest(request);
 
-            var body = System.Text.Json.JsonSerializer.Serialize(new { Route = context.Request.RouteValues["route"], Method = context.Request.Method, Body = response.Body });
-            await context.Response.WriteAsync(body);
+            // var body = System.Text.Json.JsonSerializer.Serialize(new { Route = context.Request.RouteValues["route"], Method = context.Request.Method, Body = response.Body });
+            context.Response.ContentType = "text/plain";
+            await context.Response.WriteAsync(response.Body);
             await context.Response.CompleteAsync();
         }));
 
         app.MapGrpcService<ProxyService>().RequireHost($"*:6000");
 
-        app.Run();
+        return app;
     }
 }
