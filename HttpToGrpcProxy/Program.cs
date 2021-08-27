@@ -42,26 +42,28 @@ public class Program
 
         app.UseRouting();
 
-        app.UseEndpoints(endpoints => endpoints.Map("{**route}", async context =>
-        {
-            var proxy = context.RequestServices.GetService<ProxyService>();
-
-            var request = new Request
-            {
-                Route = context.Request.RouteValues["route"].ToString(),
-                Method = context.Request.Method,
-                // Body = await new StreamReader(context.Request.Body).ReadToEndAsync() // TODO: if post
-            };
-            var response = await proxy.ForwardRequest(request);
-
-            // var body = System.Text.Json.JsonSerializer.Serialize(new { Route = context.Request.RouteValues["route"], Method = context.Request.Method, Body = response.Body });
-            context.Response.ContentType = "text/plain";
-            await context.Response.WriteAsync(response.Response.Body);
-            await context.Response.CompleteAsync();
-        }));
+        app.UseEndpoints(endpoints => endpoints.Map("{**route}", HandleRequest));
 
         app.MapGrpcService<ProxyService>().RequireHost($"*:6000");
 
         return app;
+    }
+
+    private static async Task HandleRequest(HttpContext context)
+    {
+        var proxy = context.RequestServices.GetService<ProxyService>();
+
+        var request = new Request
+        {
+            Route = context.Request.RouteValues["route"].ToString(),
+            Method = context.Request.Method,
+            // Body = await new StreamReader(context.Request.Body).ReadToEndAsync() // TODO: if post
+        };
+        var response = await proxy.ForwardRequest(request);
+
+        // var body = System.Text.Json.JsonSerializer.Serialize(new { Route = context.Request.RouteValues["route"], Method = context.Request.Method, Body = response.Body });
+        context.Response.ContentType = "text/plain";
+        await context.Response.WriteAsync(response.Response.Body);
+        await context.Response.CompleteAsync();
     }
 }
