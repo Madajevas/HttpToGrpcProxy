@@ -57,13 +57,33 @@ public class Program
         {
             Route = context.Request.RouteValues["route"].ToString(),
             Method = context.Request.Method,
-            // Body = await new StreamReader(context.Request.Body).ReadToEndAsync() // TODO: if post
+            Body = await GetBody(context.Request),
+            ContentType = context.Request.ContentType ?? ""
         };
-        var response = await proxy.ForwardRequest(request);
+        var response = (await proxy.ForwardRequest(request)).Response;
 
-        // var body = System.Text.Json.JsonSerializer.Serialize(new { Route = context.Request.RouteValues["route"], Method = context.Request.Method, Body = response.Body });
-        context.Response.ContentType = "text/plain";
-        await context.Response.WriteAsync(response.Response.Body);
+        context.Response.ContentType = response.ContentType;
+        await context.Response.WriteAsync(response.Body);
         await context.Response.CompleteAsync();
+    }
+
+    private static async Task<string?> GetBody(HttpRequest request)
+    {
+        return request.Method switch
+        {
+            HttpMethods.Post or HttpMethods.Put or HttpMethods.Patch => await new StreamReader(request.Body).ReadToEndAsync(),
+            HttpMethods.Get or HttpMethods.Delete or HttpMethods.Head => "", // at the moment protobuf optional is not supported
+            _ => throw new InvalidOperationException($"Method ${request.Method} is not supported")
+        };
+    }
+
+    class HttpMethods
+    {
+        public const string Get = "GET";
+        public const string Post = "POST";
+        public const string Put = "PUT";
+        public const string Delete = "DELETE";
+        public const string Patch = "PATCH";
+        public const string Head = "HEAD";
     }
 }

@@ -9,6 +9,9 @@ class ResponseContext
     private readonly Response response;
     private readonly ConcurrentDictionary<string, TaskCompletionSource<ResponseContext>> promises;
 
+    /// <summary>
+    /// Will self destruct after first use
+    /// </summary>
     public Response Response
     {
         get

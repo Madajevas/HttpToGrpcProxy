@@ -49,7 +49,7 @@ namespace HttpToGrpcProxy.Tests
             Assert.That(requestContext.Request.Route, Is.EqualTo("anything/anywhere"));
 
             // respond to request, block
-            var response = new Response { Body = "responding from unit test" };
+            var response = new Response { Body = "responding from unit test", ContentType = "text/plain" };
             await requestContext.Respond(response);
 
             // TODO: some sort of timeout logic is necessary here
@@ -69,7 +69,7 @@ namespace HttpToGrpcProxy.Tests
 
             Assert.That(requestContext.Request.Route, Is.EqualTo("anything/anywhere"));
 
-            var response = new Response { Body = "new content" };
+            var response = new Response { Body = "new content", ContentType = "text/plain" };
             await requestContext.Respond(response);
 
             var httpResponse = await resultPromise;

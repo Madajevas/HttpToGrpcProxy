@@ -10,9 +10,11 @@ message Request {
     string route = 1;
     string method = 2;
     string body = 3;
+    string contentType = 4;
 }
 
 message Response {
     string route = 1;
     string body = 2;
+    string contentType = 3;
 }
