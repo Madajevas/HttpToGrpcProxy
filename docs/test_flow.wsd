@@ -1,0 +1,35 @@
+@startuml
+
+participant Test
+participant GrpcClient
+participant Front
+participant Edge
+participant HttpToGrpcMock
+
+Test --> Front: POST /send/post
+Test --> GrpcClient: instruct to wait for /external/call
+Front -> Edge: Internal communication
+Edge -> HttpToGrpcMock: http
+note right of Edge
+Thinks is calling actual
+external service
+endnote
+HttpToGrpcMock -> GrpcClient: grpc
+note right of HttpToGrpcMock
+Info about received request
+is forwarded to tests
+endnote
+GrpcClient -> Test
+Test -> Test: Assert request
+Test -> GrpcClient: Mocked response
+GrpcClient -> HttpToGrpcMock
+HttpToGrpcMock --> Edge: http
+Edge --> Front
+note right of Front
+Responding back front may not be necessary in most cases.
+Maybe it would be database update or something like that
+endnote
+Front --> Test: Resolve /send/post promise
+Test -> Test: Assert response
+
+@enduml

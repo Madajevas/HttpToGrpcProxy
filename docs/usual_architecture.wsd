@@ -1,0 +1,45 @@
+@startuml usual flow
+
+package "External_World" {
+    [external.service.one]
+    [external.service.two]
+}
+
+package "Microservices" {
+    [Front] -u-> [Intermediate]: grpc
+    [Intermediate] -u-> [Edge1]: mq
+    [Intermediate] -u-> [Edge2]: mq
+
+    [Edge1] -u-> [external.service.one]: http
+    [Edge2] -u-> [external.service.two]: http
+}
+
+actor User
+User -u-> [Front]: interacts
+
+note right of Microservices
+A set of microservices that communicates internaly
+Docker compose in local development
+endnote
+
+note right of User
+User or another system that interacts with
+one or more exposed services
+endnote
+
+note right of Front
+For example: Front service communicates with
+intermediate service with grpc protocol
+endnote
+
+note right of Intermediate
+For example: Intermediate service communicates
+with edge services with message protocol
+endnote
+
+note right of External_World
+Any external services that application uses
+Communication to those services are caried out through http
+endnote
+
+@enduml

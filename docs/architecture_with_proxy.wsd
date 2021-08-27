@@ -1,0 +1,25 @@
+@startuml proxy flow
+
+package "Microservices" {
+    [Front] -u-> [Intermediate]: grpc
+    [Intermediate] -u-> [Edge1]: mq
+    [Intermediate] -u-> [Edge2]: mq
+
+    [Edge1] -u-> [HttpToGrpcMock]: http
+    [Edge2] -u-> [HttpToGrpcMock]: http
+
+    [HttpToGrpcMock]
+}
+
+package Integration_Tests {
+    [GrpcClient] -l-> [HttpToGrpcMock]
+}
+
+note bottom of GrpcClient
+When tests run, client connects to proxy living inside docker compose
+and receives request to it proxied via grpc protocol. Grpc is used to
+enable bidirectional comunication so not only request (to proxy) can
+be recieved but responses posted back.
+endnote
+
+@enduml
