@@ -1,44 +1,17 @@
-﻿using HttpToGrpcProxy.Tests.Deserializers;
-
-using Microsoft.AspNetCore.Builder;
-
-using NUnit.Framework;
-
-using ProxyInterceptorTestsClient;
+﻿using NUnit.Framework;
 
 using RestSharp;
 
 namespace HttpToGrpcProxy.Tests
 {
-    public class IntegrationTests : TestBase
+    public class IntegrationTests : IntegrationTestsBase
     {
-        private WebApplication app;
-        private RestClient httpClient;
-
-        public IntegrationTests() : base(new Uri("http://localhost:6000")) { }
-
-        [OneTimeSetUp]
-        public void InitializeHttpClientAndProxyServer()
-        {
-            app = Program.CreateApplication(Array.Empty<string>());
-            app.RunAsync();
-
-            httpClient = new RestClient("http://localhost:5000");
-            httpClient.AddHandler("text/plain", new TextPlainDeserializer());
-        }
-
-        [OneTimeTearDown]
-        public Task StopProxyServer()
-        {
-            return app.StopAsync();
-        }
-
         [Test, Order(1)]
         public async Task TestRoundTrip()
         {
             var request = new RestRequest("/anything/anywhere");
             // do not block thread when making request
-            var resultPromise = httpClient.GetAsync<string>(request);
+            var resultPromise = HttpClient.GetAsync<string>(request);
 
             // TODO: thim slashes
             // TODO: cancellation token to enable timeout
@@ -64,7 +37,7 @@ namespace HttpToGrpcProxy.Tests
         public async Task SubsequentRequestsToSamePathMustBeResolvedSeparately()
         {
             var request = new RestRequest("/anything/anywhere");
-            var resultPromise = httpClient.GetAsync<string>(request);
+            var resultPromise = HttpClient.GetAsync<string>(request);
             var requestContext = await Proxy.InterceptRequest("anything/anywhere");
 
             Assert.That(requestContext.Request.Route, Is.EqualTo("anything/anywhere"));
