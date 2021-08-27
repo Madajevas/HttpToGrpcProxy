@@ -33,7 +33,7 @@ namespace HttpToGrpcProxy.Tests
             return app.StopAsync();
         }
 
-        [Test]
+        [Test, Order(1)]
         public async Task TestRoundTrip()
         {
             var request = new RestRequest("/anything/anywhere");
@@ -58,6 +58,23 @@ namespace HttpToGrpcProxy.Tests
 
             // assert whats necessary
             Assert.That(httpResponse, Is.EqualTo("responding from unit test"));
+        }
+
+        [Test, Order(2)]
+        public async Task SubsequentRequestsToSamePathMustBeResolvedSeparately()
+        {
+            var request = new RestRequest("/anything/anywhere");
+            var resultPromise = httpClient.GetAsync<string>(request);
+            var requestContext = await Proxy.InterceptRequest("anything/anywhere");
+
+            Assert.That(requestContext.Request.Route, Is.EqualTo("anything/anywhere"));
+
+            var response = new Response { Body = "new content" };
+            await requestContext.Respond(response);
+
+            var httpResponse = await resultPromise;
+
+            Assert.That(httpResponse, Is.EqualTo("new content"));
         }
     }
 }

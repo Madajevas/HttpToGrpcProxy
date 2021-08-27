@@ -56,7 +56,7 @@ public class Program
 
             // var body = System.Text.Json.JsonSerializer.Serialize(new { Route = context.Request.RouteValues["route"], Method = context.Request.Method, Body = response.Body });
             context.Response.ContentType = "text/plain";
-            await context.Response.WriteAsync(response.Body);
+            await context.Response.WriteAsync(response.Response.Body);
             await context.Response.CompleteAsync();
         }));
 

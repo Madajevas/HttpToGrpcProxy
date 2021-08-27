@@ -4,6 +4,28 @@ using System.Collections.Concurrent;
 
 namespace HttpToGrpcProxy.Services;
 
+class ResponseContext
+{
+    private readonly Response response;
+    private readonly ConcurrentDictionary<string, TaskCompletionSource<ResponseContext>> promises;
+
+    public Response Response
+    {
+        get
+        {
+            promises.Remove(response.Route, out var _);
+
+            return response;
+        }
+    }
+
+    public ResponseContext(Response response, ConcurrentDictionary<string, TaskCompletionSource<ResponseContext>> promises)
+    {
+        this.response = response;
+        this.promises = promises;
+    }
+}
+
 /// <summary>
 /// Intenden for single client
 /// </summary>
@@ -13,15 +35,15 @@ class ProxyService : Proxy.ProxyBase
 
     private IAsyncStreamWriter<Request> responseStream;
 
-    private ConcurrentDictionary<string, TaskCompletionSource<Response>> promises = new ConcurrentDictionary<string, TaskCompletionSource<Response>>();
+    private ConcurrentDictionary<string, TaskCompletionSource<ResponseContext>> promises = new ConcurrentDictionary<string, TaskCompletionSource<ResponseContext>>();
 
-    private TaskCompletionSource<Response> this[string route]
+    private TaskCompletionSource<ResponseContext> this[string route]
     {
         get
         {
             if (!promises.ContainsKey(route))
             {
-                promises[route] = new TaskCompletionSource<Response>();
+                promises[route] = new TaskCompletionSource<ResponseContext>();
             }
 
             return promises[route];
@@ -40,7 +62,7 @@ class ProxyService : Proxy.ProxyBase
         return InitReader(requestStream, context);
     }
 
-    public async Task<Response> ForwardRequest(Request request)
+    public async Task<ResponseContext> ForwardRequest(Request request)
     {
         if (responseStream == null) // TODO: what if client disconnects?
         {
@@ -61,7 +83,8 @@ class ProxyService : Proxy.ProxyBase
             var message = requestStream.Current;
             logger.LogInformation("Response received {Response}", message);
 
-            this[message.Route].SetResult(message);
+            var responseContext = new ResponseContext(message, promises);
+            this[message.Route].SetResult(responseContext);
         }
     }
 }
