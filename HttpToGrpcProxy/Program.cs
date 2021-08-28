@@ -60,10 +60,10 @@ public class Program
             Body = await GetBody(context.Request),
             ContentType = context.Request.ContentType ?? ""
         };
-        var response = (await proxy.ForwardRequest(request)).Value;
+        using var response = await proxy.ForwardRequest(request);
 
-        context.Response.ContentType = response.ContentType;
-        await context.Response.WriteAsync(response.Body);
+        context.Response.ContentType = response.Value.ContentType;
+        await context.Response.WriteAsync(response.Value.Body);
         await context.Response.CompleteAsync();
     }
 
