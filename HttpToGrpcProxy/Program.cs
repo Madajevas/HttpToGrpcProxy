@@ -1,17 +1,9 @@
 using HttpToGrpcProxy;
 using HttpToGrpcProxy.Services;
 
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 
-using System;
-using System.IO;
 using System.Net;
-using System.Threading.Tasks;
 
 public class Program
 {
@@ -68,7 +60,7 @@ public class Program
             Body = await GetBody(context.Request),
             ContentType = context.Request.ContentType ?? ""
         };
-        var response = (await proxy.ForwardRequest(request)).Response;
+        var response = (await proxy.ForwardRequest(request)).Value;
 
         context.Response.ContentType = response.ContentType;
         await context.Response.WriteAsync(response.Body);
