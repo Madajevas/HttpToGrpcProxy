@@ -1,12 +1,8 @@
 ﻿using NUnit.Framework;
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Text.Json;
 using RestSharp;
+using ProxyInterceptorTestsClient;
 
 namespace HttpToGrpcProxy.Tests
 {
@@ -30,9 +26,9 @@ namespace HttpToGrpcProxy.Tests
 
             var requestContext = await Proxy.InterceptRequest("anything/json");
 
-            Assert.That(requestContext.Request.ContentType, Is.EqualTo("application/json"));
+            Assert.That(requestContext.Value.ContentType, Is.EqualTo("application/json"));
 
-            var receivedModel = requestContext.Bind<JsonBinding>();
+            var receivedModel = requestContext.BindJson<JsonBinding>();
 
             Assert.That(receivedModel.Id, Is.EqualTo(1));
             Assert.That(receivedModel.Name, Is.EqualTo("name"));

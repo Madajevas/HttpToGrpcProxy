@@ -15,6 +15,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\HttpToGrpcProxy.Commons\HttpToGrpcProxy.Commons.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Protobuf Include="..\HttpToGrpcProxy\proxy.proto" GrpcServices="Client">
       <Link>Protos\proxy.proto</Link>
     </Protobuf>

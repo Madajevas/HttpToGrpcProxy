@@ -2,6 +2,8 @@
 
 using RestSharp;
 
+using ProxyInterceptorTestsClient;
+
 namespace HttpToGrpcProxy.Tests
 {
     public class IntegrationTests : IntegrationTestsBase
@@ -19,11 +21,11 @@ namespace HttpToGrpcProxy.Tests
             var requestContext = await Proxy.InterceptRequest("anything/anywhere");
 
             // assert what ever is necessary
-            Assert.That(requestContext.Request.Route, Is.EqualTo("anything/anywhere"));
+            Assert.That(requestContext.Value.Route, Is.EqualTo("anything/anywhere"));
 
             // respond to request, block
-            var response = new Response { Body = "responding from unit test", ContentType = "text/plain" };
-            await requestContext.Respond(response);
+            var response = new Response { Route = "anything/anywhere", Body = "responding from unit test", ContentType = "text/plain" };
+            await Proxy.Respond(response);
 
             // TODO: some sort of timeout logic is necessary here
             // now wait for response to come back
@@ -40,10 +42,10 @@ namespace HttpToGrpcProxy.Tests
             var resultPromise = HttpClient.GetAsync<string>(request);
             var requestContext = await Proxy.InterceptRequest("anything/anywhere");
 
-            Assert.That(requestContext.Request.Route, Is.EqualTo("anything/anywhere"));
+            Assert.That(requestContext.Value.Route, Is.EqualTo("anything/anywhere"));
 
-            var response = new Response { Body = "new content", ContentType = "text/plain" };
-            await requestContext.Respond(response);
+            var response = new Response { Route = "anything/anywhere", Body = "new content", ContentType = "text/plain" };
+            await Proxy.Respond(response);
 
             var httpResponse = await resultPromise;
 

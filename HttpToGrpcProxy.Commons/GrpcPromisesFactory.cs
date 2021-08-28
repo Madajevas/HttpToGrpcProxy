@@ -12,16 +12,17 @@ namespace HttpToGrpcProxy.Commons
         private IAsyncStreamWriter<TIn> writeStream;
         private ConcurrentDictionary<string, TaskCompletionSource<GrpcPromiseContext<TOut>>> promises = new ConcurrentDictionary<string, TaskCompletionSource<GrpcPromiseContext<TOut>>>();
 
-        private TaskCompletionSource<GrpcPromiseContext<TOut>> this[string route]
+        public TaskCompletionSource<GrpcPromiseContext<TOut>> this[string route]
         {
             get
             {
-                if (!promises.ContainsKey(route))
+                var sanitizedRoute = route.Trim('/');
+                if (!promises.ContainsKey(sanitizedRoute))
                 {
-                    promises[route] = new TaskCompletionSource<GrpcPromiseContext<TOut>>();
+                    promises[sanitizedRoute] = new TaskCompletionSource<GrpcPromiseContext<TOut>>();
                 }
 
-                return promises[route];
+                return promises[sanitizedRoute];
             }
         }
 
