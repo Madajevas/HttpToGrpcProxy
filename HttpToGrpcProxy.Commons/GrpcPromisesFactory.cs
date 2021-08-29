@@ -42,9 +42,11 @@ namespace HttpToGrpcProxy.Commons
             this.writeStream = writeStream;
         }
 
-        public async Task<GrpcPromiseContext<TOut>> SendData(TIn value)
+        public async Task<GrpcPromiseContext<TOut>> SendData(TIn value, CancellationToken cancellationToken)
         {
             await writeStream.WriteAsync(value);
+
+            cancellationToken.Register(() => this[value.GetRoute()].SetCanceled());
 
             return await this[value.GetRoute()].Task;
         }

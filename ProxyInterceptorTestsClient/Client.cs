@@ -40,7 +40,7 @@ namespace ProxyInterceptorTestsClient
             return responseFactory[route].Task;
         }
 
-        public Task Respond(Response response) => responseFactory.SendData(response);
+        public Task Respond(Response response) => responseFactory.SendData(response, default(CancellationToken));
 
         public void Dispose()
         {

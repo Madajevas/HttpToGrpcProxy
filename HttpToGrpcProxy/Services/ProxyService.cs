@@ -26,7 +26,7 @@ class ProxyService : Proxy.ProxyBase
         return awaiter;
     }
 
-    public Task<GrpcPromiseContext<Response>> ForwardRequest(Request request)
+    public Task<GrpcPromiseContext<Response>> ForwardRequest(Request request, CancellationToken cancellationToken)
     {
         if (responseFactory == null) // TODO: what if client disconnects?
         {
@@ -35,6 +35,6 @@ class ProxyService : Proxy.ProxyBase
 
         logger.LogInformation("Request received {Request}", request);
 
-        return responseFactory.SendData(request);
+        return responseFactory.SendData(request, cancellationToken);
     }
 }

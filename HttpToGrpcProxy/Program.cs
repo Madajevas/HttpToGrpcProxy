@@ -49,7 +49,7 @@ public class Program
         return app;
     }
 
-    private static async Task HandleRequest(HttpContext context)
+    private static async Task HandleRequest(HttpContext context, CancellationToken cancellationToken)
     {
         var proxy = context.RequestServices.GetService<ProxyService>();
 
@@ -60,7 +60,7 @@ public class Program
             Body = await GetBody(context.Request),
             ContentType = context.Request.ContentType ?? ""
         };
-        using var response = await proxy.ForwardRequest(request);
+        using var response = await proxy.ForwardRequest(request, cancellationToken);
 
         context.Response.ContentType = response.Value.ContentType;
         await context.Response.WriteAsync(response.Value.Body);
