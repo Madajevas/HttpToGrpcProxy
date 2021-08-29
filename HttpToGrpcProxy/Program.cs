@@ -57,6 +57,12 @@ public class Program
         using var response = await proxy.ForwardRequest(request, cancellationToken);
 
         context.Response.ContentType = response.Value.ContentType;
+
+        foreach (var header in response.Value.Headers.Values)
+        {
+            context.Response.Headers.Add(header.Key, header.Value);
+        }
+
         await context.Response.WriteAsync(response.Value.Body);
         await context.Response.CompleteAsync();
     }
