@@ -42,7 +42,7 @@ public class Program
 
         app.UseRouting();
 
-        app.UseEndpoints(endpoints => endpoints.Map("{**route}", HandleRequest));
+        app.UseEndpoints(endpoints => endpoints.Map("{**route}", HandleRequest).RequireHost($"*:5000"));
 
         app.MapGrpcService<ProxyService>().RequireHost($"*:6000");
 
@@ -56,15 +56,24 @@ public class Program
         var request = await GetRequest(context.Request);
         using var response = await proxy.ForwardRequest(request, cancellationToken);
 
-        context.Response.ContentType = response.Value.ContentType;
-
-        foreach (var header in response.Value.Headers.Values)
-        {
-            context.Response.Headers.Add(header.Key, header.Value);
-        }
-
+        AddHeaders(response.Value, context.Response);
         await context.Response.WriteAsync(response.Value.Body);
         await context.Response.CompleteAsync();
+    }
+
+    private static void AddHeaders(Response response, HttpResponse httpResonse)
+    {
+        httpResonse.ContentType = response.ContentType;
+
+        if (response.Headers == null)
+        {
+            return;
+        }
+
+        foreach (var header in response.Headers.Values)
+        {
+            httpResonse.Headers.Add(header.Key, header.Value);
+        }
     }
 
     private static async Task<Request> GetRequest(HttpRequest httpRequest)
