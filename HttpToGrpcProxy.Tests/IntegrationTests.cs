@@ -2,8 +2,6 @@
 
 using RestSharp;
 
-using ProxyInterceptorTestsClient;
-
 namespace HttpToGrpcProxy.Tests
 {
     public class IntegrationTests : IntegrationTestsBase
@@ -15,8 +13,6 @@ namespace HttpToGrpcProxy.Tests
             // do not block thread when making request
             var resultPromise = HttpClient.GetAsync<string>(request);
 
-            // TODO: thim slashes
-            // TODO: cancellation token to enable timeout
             // block until request is received
             var requestContext = await Proxy.InterceptRequest("anything/anywhere");
 
