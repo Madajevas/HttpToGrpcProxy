@@ -23,7 +23,6 @@ namespace HttpToGrpcProxy.Tests
             var response = new Response { Route = "anything/anywhere", Body = "responding from unit test", ContentType = "text/plain" };
             await Proxy.Respond(response);
 
-            // TODO: some sort of timeout logic is necessary here
             // now wait for response to come back
             var httpResponse = await resultPromise;
 
