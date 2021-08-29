@@ -53,18 +53,28 @@ public class Program
     {
         var proxy = context.RequestServices.GetService<ProxyService>();
 
-        var request = new Request
-        {
-            Route = context.Request.RouteValues["route"].ToString(),
-            Method = context.Request.Method,
-            Body = await GetBody(context.Request),
-            ContentType = context.Request.ContentType ?? ""
-        };
+        var request = await GetRequest(context.Request);
         using var response = await proxy.ForwardRequest(request, cancellationToken);
 
         context.Response.ContentType = response.Value.ContentType;
         await context.Response.WriteAsync(response.Value.Body);
         await context.Response.CompleteAsync();
+    }
+
+    private static async Task<Request> GetRequest(HttpRequest httpRequest)
+    {
+        var request = new Request
+        {
+            Route = httpRequest.RouteValues["route"].ToString(),
+            Method = httpRequest.Method,
+            Body = await GetBody(httpRequest),
+            ContentType = httpRequest.ContentType ?? "",
+            Headers = new Headers()
+        };
+
+        request.Headers.Values.Add(httpRequest.Headers.ToDictionary(h => h.Key, h => h.Value.ToString()));
+
+        return request;
     }
 
     private static async Task<string?> GetBody(HttpRequest request)
