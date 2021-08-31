@@ -12,3 +12,11 @@ In the following diagram `HttpToGrpcMock` is service hosted in docker compose wi
 
 Sequence diagram may explain better how everyting works:
 ![test_flow](https://www.plantuml.com/plantuml/png/TLFBSi8m3BpxA_G3b7iE7JgTFZWmxRJv0U48ui6nKbk1ylUL4mWaCxqfahMxMYch91YbQxmnhGREkXQ3G4b99ectsDfdxoXCqw-HPvcNQa-JnBj8MtBktx0z69EXOR5u77eB-FpuBc6PA5JBbfLrhDye2t0XIUoiW32Sq0diECAIVeLYGB-qwBtfyK0RiuG2rc4eWkMcwOApA8w3oSNyQ2ghW5g_JM0XY6vV2_1k6AMiNJWaS0aoYGjxG2iTUdCbXqJnw2mPdI3tcoaop2RPQppZcJcq3Zi6t78d4CcIErAbmK-NLw8oTF8JnagJweLeCetCDvxCskzmS7FuAE0fgLWPqQx5UtrPGa-OMWvfZZcJEXzrDBztSx3wkkdPq4FkgwUfigrRL8HTlyC6pw2lOKiGr86KC9xr1A3H-z0r94eFPeDdBUibdBZpLNvQeU1MYz2r6XBeXIHkIEgCxjs1G6gKqQpBkOpUg1JsHxexHMWZDquz-CV4YqDcfGtw1_q1 "test_flow")
+
+## Runing in docker compose and docker build
+```powershell
+docker compose -f ./DockerComposeTests/docker-compose.yml build
+docker compose -f ./DockerComposeTests/docker-compose.yml -d up
+
+docker build -o . -f ./DockerComposeTests/TestApp.Tests/Dockerfile .
+```
