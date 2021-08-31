@@ -18,5 +18,6 @@ Sequence diagram may explain better how everyting works:
 docker compose -f ./DockerComposeTests/docker-compose.yml build
 docker compose -f ./DockerComposeTests/docker-compose.yml -d up
 
-docker build -o . -f ./DockerComposeTests/TestApp.Tests/Dockerfile .
+docker build -o . -f ./DockerComposeTests/TestApp.Tests/Dockerfile --build-arg CACHEBUST=$(date) .
 ```
+> Tests result xml file will be copied out of container into `./test_results` folder

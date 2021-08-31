@@ -16,6 +16,7 @@ RUN dotnet publish "TestApp.Tests.csproj" -c Release -o /app/publish
 FROM mcr.microsoft.com/dotnet/sdk:5.0 AS test
 WORKDIR /test
 COPY --from=publish /app/publish .
+ARG CACHEBUST=1
 RUN dotnet test "TestApp.Tests.dll" --results-directory /test/results --logger:nunit
 
 FROM scratch as output
