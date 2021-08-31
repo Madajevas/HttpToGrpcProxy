@@ -21,6 +21,7 @@ class ProxyService : Proxy.ProxyBase
 
     public override Task OnMessage(IAsyncStreamReader<Response> requestStream, IServerStreamWriter<Request> responseStream, ServerCallContext context)
     {
+        logger.LogInformation("Grpc client connected");
         (responseFactory, var awaiter) = GrpcPromisesFactory<Request, Response>.Initialize(responseStream, requestStream, context.CancellationToken);
 
         return awaiter;

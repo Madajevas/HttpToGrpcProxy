@@ -23,6 +23,7 @@ public class Program
                 options.Listen(IPAddress.Any, 6000, listenOptions => listenOptions.Protocols = HttpProtocols.Http2);
                 // http/rest
                 options.Listen(IPAddress.Any, 5000, listenOptions => listenOptions.Protocols = HttpProtocols.Http1);
+                options.Listen(IPAddress.Any, 80, listenOptions => listenOptions.Protocols = HttpProtocols.Http1);
             });
 
         // Add services to the container.
@@ -42,7 +43,7 @@ public class Program
 
         app.UseRouting();
 
-        app.UseEndpoints(endpoints => endpoints.Map("{**route}", HandleRequest).RequireHost($"*:5000"));
+        app.UseEndpoints(endpoints => endpoints.Map("{**route}", HandleRequest)/*.RequireHost($"*:5000")*/);
 
         app.MapGrpcService<ProxyService>().RequireHost($"*:6000");
 
@@ -51,6 +52,9 @@ public class Program
 
     private static async Task HandleRequest(HttpContext context, CancellationToken cancellationToken)
     {
+        var logger = context.RequestServices.GetService<ILogger<Program>>();
+        logger.LogInformation("Request received {Path}", context.Request.Path);
+
         var proxy = context.RequestServices.GetService<ProxyService>();
 
         var request = await GetRequest(context.Request);
