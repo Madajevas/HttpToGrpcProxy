@@ -8,6 +8,8 @@ services:
     build:
       context: ../
       dockerfile: ./HttpToGrpcProxy/Dockerfile
+    environment:
+      - HTTP_PORTS=80
     ports:
       #- "80:5000" # appearently there is no need to open http port, it is accessible inside docker compose
       - "6000:6000" # port for grpc client to connect

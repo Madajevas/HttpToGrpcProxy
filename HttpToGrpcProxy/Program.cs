@@ -21,9 +21,13 @@ public class Program
             {
                 // grpc
                 options.Listen(IPAddress.Any, 6000, listenOptions => listenOptions.Protocols = HttpProtocols.Http2);
+
                 // http/rest
-                options.Listen(IPAddress.Any, 5000, listenOptions => listenOptions.Protocols = HttpProtocols.Http1);
-                options.Listen(IPAddress.Any, 80, listenOptions => listenOptions.Protocols = HttpProtocols.Http1);
+                var httpPorts = Environment.GetEnvironmentVariable("HTTP_PORTS")?.Split(',').Select(int.Parse) ?? new[] { 5000 };
+                foreach (var port in httpPorts)
+                {
+                    options.Listen(IPAddress.Any, port, listenOptions => listenOptions.Protocols = HttpProtocols.Http1);
+                }
             });
 
         // Add services to the container.
