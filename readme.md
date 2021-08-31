@@ -1,4 +1,4 @@
-# Http To Grpc Proxy
+# Http To Grpc Proxy - POC
 Solution intended to intercept communication with external services in integration tests.
 
 ## Problem
