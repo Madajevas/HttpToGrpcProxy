@@ -9,7 +9,21 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HttpToGrpcProxy", "HttpToGr
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProxyInterceptorTestsClient", "ProxyInterceptorTestsClient\ProxyInterceptorTestsClient.csproj", "{A3CD9867-6CF0-4799-B2DB-609F822E54B5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HttpToGrpcProxy.Commons", "HttpToGrpcProxy.Commons\HttpToGrpcProxy.Commons.csproj", "{F1DB3CD3-E564-4DA9-9CD8-C5372B047665}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HttpToGrpcProxy.Commons", "HttpToGrpcProxy.Commons\HttpToGrpcProxy.Commons.csproj", "{F1DB3CD3-E564-4DA9-9CD8-C5372B047665}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{B261B760-3155-4941-B73E-4D45C2EF3344}"
+	ProjectSection(SolutionItems) = preProject
+		readme.md = readme.md
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestApp", "DockerComposeTests\TestApp\TestApp.csproj", "{B22ECBC0-6F5F-4C65-961D-252B5797E463}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DockerComposeTests", "DockerComposeTests", "{568E14D4-1406-463F-9EB4-8EFECA967A3D}"
+	ProjectSection(SolutionItems) = preProject
+		DockerComposeTests\docker-compose.yml = DockerComposeTests\docker-compose.yml
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestApp.Tests", "DockerComposeTests\TestApp.Tests\TestApp.Tests.csproj", "{66F1ADB7-5907-4F1A-A7FC-9FBF6B8D0620}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,9 +47,21 @@ Global
 		{F1DB3CD3-E564-4DA9-9CD8-C5372B047665}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F1DB3CD3-E564-4DA9-9CD8-C5372B047665}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F1DB3CD3-E564-4DA9-9CD8-C5372B047665}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B22ECBC0-6F5F-4C65-961D-252B5797E463}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B22ECBC0-6F5F-4C65-961D-252B5797E463}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B22ECBC0-6F5F-4C65-961D-252B5797E463}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B22ECBC0-6F5F-4C65-961D-252B5797E463}.Release|Any CPU.Build.0 = Release|Any CPU
+		{66F1ADB7-5907-4F1A-A7FC-9FBF6B8D0620}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{66F1ADB7-5907-4F1A-A7FC-9FBF6B8D0620}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{66F1ADB7-5907-4F1A-A7FC-9FBF6B8D0620}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{66F1ADB7-5907-4F1A-A7FC-9FBF6B8D0620}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{B22ECBC0-6F5F-4C65-961D-252B5797E463} = {568E14D4-1406-463F-9EB4-8EFECA967A3D}
+		{66F1ADB7-5907-4F1A-A7FC-9FBF6B8D0620} = {568E14D4-1406-463F-9EB4-8EFECA967A3D}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {17F3074E-2A9C-443B-9AC9-5F0CEC5CC05E}

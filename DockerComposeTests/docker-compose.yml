@@ -1,0 +1,62 @@
+version: '3.9'
+
+networks:
+  test_network:
+
+
+services:
+  proxy:
+    build:
+      context: ../
+      dockerfile: ./HttpToGrpcProxy/Dockerfile
+    ports:
+      #- "80:5000" # port for http calls
+      - "6000:6000" # port for grpc client to connect
+    networks:
+      default:
+      test_network:
+        aliases:
+          - first.example.com
+          - second.example.com
+
+  test_app:
+    build:
+      context: ./
+      dockerfile: ./TestApp/Dockerfile
+    ports:
+      - "8080:80"
+    networks:
+      test_network:
+        aliases:
+          - just_tests
+
+# version: "3.9"
+# 
+# services:
+#   web:
+#     image: "nginx:alpine"
+#     networks:
+#       new:
+#         aliases:
+#           - nginx_at_new
+#       legacy:
+#         aliases:
+#           - nginx_al_legacy
+# 
+#   db:
+#     image: mysql
+#     environment:
+#       - MYSQL_ROOT_PASSWORD=test
+#       - MYSQL_ALLOW_EMPTY_PASSWORD=grybukai
+#       - MYSQL_RANDOM_ROOT_PASSWORD=niekamnedomu
+#     networks:
+#       new:
+#         aliases:
+#           - database
+#       legacy:
+#         aliases:
+#           - mysql
+# 
+# networks:
+#   new:
+#   legacy:
