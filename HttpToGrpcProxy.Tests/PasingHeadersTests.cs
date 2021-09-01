@@ -11,6 +11,12 @@ namespace HttpToGrpcProxy.Tests
         private Task<IRestResponse> resultPromise;
         private GrpcPromiseContext<Request> requestContext;
 
+        [OneTimeTearDown]
+        public void Dispose()
+        {
+            requestContext?.Dispose();
+        }
+
         [Test, Order(1)]
         public async Task RequestHeadersAreForwarded()
         {

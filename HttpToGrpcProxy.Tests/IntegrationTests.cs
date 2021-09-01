@@ -14,7 +14,7 @@ namespace HttpToGrpcProxy.Tests
             var resultPromise = HttpClient.GetAsync<string>(request);
 
             // block until request is received
-            var requestContext = await Proxy.InterceptRequest("anything/anywhere");
+            using var requestContext = await Proxy.InterceptRequest("anything/anywhere");
 
             // assert what ever is necessary
             Assert.That(requestContext.Value.Route, Is.EqualTo("anything/anywhere"));
@@ -35,7 +35,7 @@ namespace HttpToGrpcProxy.Tests
         {
             var request = new RestRequest("/anything/anywhere");
             var resultPromise = HttpClient.GetAsync<string>(request);
-            var requestContext = await Proxy.InterceptRequest("anything/anywhere");
+            using var requestContext = await Proxy.InterceptRequest("anything/anywhere");
 
             Assert.That(requestContext.Value.Route, Is.EqualTo("anything/anywhere"));
 

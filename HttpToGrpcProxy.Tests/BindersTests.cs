@@ -24,7 +24,7 @@ namespace HttpToGrpcProxy.Tests
             request.AddParameter("application/json", json, ParameterType.RequestBody);
             var resultPromise = HttpClient.PostAsync<string>(request);
 
-            var requestContext = await Proxy.InterceptRequest("anything/json");
+            using var requestContext = await Proxy.InterceptRequest("anything/json");
 
             Assert.That(requestContext.Value.ContentType, Is.EqualTo("application/json"));
 
