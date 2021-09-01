@@ -18,5 +18,9 @@ RUN dotnet publish "TestApp.csproj" -c Release -o /app/publish
 
 FROM base AS final
 WORKDIR /app
+
+COPY ./second.example.com.cer ./second.example.com.crt
+RUN cat ./second.example.com.crt >> /etc/ssl/certs/ca-certificates.crt
+
 COPY --from=publish /app/publish .
 ENTRYPOINT ["dotnet", "TestApp.dll"]
