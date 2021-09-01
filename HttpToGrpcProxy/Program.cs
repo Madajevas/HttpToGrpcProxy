@@ -28,6 +28,16 @@ public class Program
                 {
                     options.Listen(IPAddress.Any, port, listenOptions => listenOptions.Protocols = HttpProtocols.Http1);
                 }
+
+                // https/rest
+                var httpsPorts = Environment.GetEnvironmentVariable("HTTPS_PORTS")?.Split(',').Select(int.Parse) ?? Array.Empty<int>();
+                foreach (var port in httpsPorts)
+                {
+                    options.Listen(IPAddress.Any, port, listenOptions => {
+                        listenOptions.Protocols = HttpProtocols.Http1;
+                        listenOptions.UseHttps("/app/https.pfx", Environment.GetEnvironmentVariable("HTTPS_CERTIFICATE_PASSWORD"));
+                    });
+                }
             });
 
         // Add services to the container.
