@@ -11,12 +11,12 @@ using System.Threading.Tasks;
 
 namespace TestApp.Tests
 {
-    public class Tests : TestBase
+    public class HttpsExternalDependencyTest : TestBase
     {
         private RestClient restClient;
         private Task<IRestResponse> responsePromise;
 
-        public Tests() : base(new Uri("http://host.docker.internal:6000"))
+        public HttpsExternalDependencyTest() : base(new Uri("http://host.docker.internal:6000"))
         {
 
         }
@@ -28,19 +28,19 @@ namespace TestApp.Tests
         }
 
         [Test, Order(1), Timeout(10_000)]
-        public async Task WhenCalling_FirsEndpoint_RequestIsCapturedByProxy()
+        public async Task WhenCalling_Endpoint_RequestIsCapturedByProxy()
         {
-            responsePromise = restClient.ExecuteAsync(new RestRequest("/first"));
-            var request = await Proxy.InterceptRequest("/first");
+            responsePromise = restClient.ExecuteAsync(new RestRequest("/second"));
+            var request = await Proxy.InterceptRequest("/second");
 
             Assert.That(request.Value.Method, Is.EqualTo("POST"));
-            Assert.That(request.Value.Headers.Values["Host"], Is.EqualTo("first.example.com"));
+            Assert.That(request.Value.Headers.Values["Host"], Is.EqualTo("second.example.com"));
         }
 
         [Test, Order(2), Timeout(10_000)]
         public async Task WhenRespondingToRequest_ItIsReceivedBackAsHttpResponse()
         {
-            var response = new Response { Route = "/first", Body = "response from test", ContentType = "text/plain" };
+            var response = new Response { Route = "/second", Body = "response from test", ContentType = "text/plain" };
             await Proxy.Respond(response);
 
             var httpResponse = await responsePromise;

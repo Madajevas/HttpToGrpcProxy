@@ -14,10 +14,53 @@ Sequence diagram may explain better how everyting works:
 ![test_flow](https://www.plantuml.com/plantuml/png/TLFBSi8m3BpxA_G3b7iE7JgTFZWmxRJv0U48ui6nKbk1ylUL4mWaCxqfahMxMYch91YbQxmnhGREkXQ3G4b99ectsDfdxoXCqw-HPvcNQa-JnBj8MtBktx0z69EXOR5u77eB-FpuBc6PA5JBbfLrhDye2t0XIUoiW32Sq0diECAIVeLYGB-qwBtfyK0RiuG2rc4eWkMcwOApA8w3oSNyQ2ghW5g_JM0XY6vV2_1k6AMiNJWaS0aoYGjxG2iTUdCbXqJnw2mPdI3tcoaop2RPQppZcJcq3Zi6t78d4CcIErAbmK-NLw8oTF8JnagJweLeCetCDvxCskzmS7FuAE0fgLWPqQx5UtrPGa-OMWvfZZcJEXzrDBztSx3wkkdPq4FkgwUfigrRL8HTlyC6pw2lOKiGr86KC9xr1A3H-z0r94eFPeDdBUibdBZpLNvQeU1MYz2r6XBeXIHkIEgCxjs1G6gKqQpBkOpUg1JsHxexHMWZDquz-CV4YqDcfGtw1_q1 "test_flow")
 
 ## Runing in docker compose and docker build
+> Self signed certificates to show how proxy works with https have been added to repo. Steps 1 - 5 are described here for self reference only
+### 1. Generate self signed certificate:
+```powershell
+New-SelfSignedCertificate -NotBefore (Get-Date) `
+                          -NotAfter (Get-Date).AddYears(10) `
+                          -Subject "second.example.com" `
+                          -KeyAlgorithm "RSA" `
+                          -KeyLength 2048 `
+                          -HashAlgorithm "SHA256" `
+                          -CertStoreLocation "cert:\CurrentUser\My" `
+                          -KeyUsage KeyEncipherment `
+                          -FriendlyName "second.example.com certificate for sample integration tests" `
+                          -TextExtension @("2.5.29.19={critical}{text}","2.5.29.37={critical}{text}1.3.6.1.5.5.7.3.1","2.5.29.17={critical}{text}DNS=second.example.com")
+```
+### 2. Export certificate to file system:
+```powershell
+$password = ConvertTo-SecureString -String "1234" -Force -AsPlainText
+Get-ChildItem -Path cert:\CurrentUser\My\< thumbprint > | Export-PfxCertificate -FilePath "< DockerComposeTests directory >\second.example.com.pfx" -Password $password
+```
+
+### 3. Export certificate to be trusted in linux:
+```powershell
+$certificate = Get-ChildItem -Path "cert:\CurrentUser\My\< thumbprint >
+$base64certificate = @"
+-----BEGIN CERTIFICATE-----
+$([Convert]::ToBase64String($certificate.Export('Cert'), [System.Base64FormattingOptions]::InsertLineBreaks))
+-----END CERTIFICATE-----
+"@
+Set-Content -Path "< DockerComposeTests directory >\second.example.com.cer" -Value $base64certificate
+```
+
+### 4. Trust self signed certificate in client docker container (in last build step):
+```Dockerfile
+COPY ./second.example.com.cer ./second.example.com.crt
+RUN cat ./second.example.com.crt >> /etc/ssl/certs/ca-certificates.crt
+```
+
+### 5. Pass `.pfx` (private and public) certificates to proxy container as shown in `docker-compose.yml` example
+
+### 6. Build and start proxy and test app (which will be trying to call external urls)
 ```powershell
 docker compose -f ./DockerComposeTests/docker-compose.yml build
 docker compose -f ./DockerComposeTests/docker-compose.yml -d up
+```
 
+### 7. Run tests in docker build
+```powershell
 docker build -o . -f ./DockerComposeTests/TestApp.Tests/Dockerfile --build-arg CACHEBUST=$(date) .
 ```
 > Tests result xml file will be copied out of container into `./test_results` folder

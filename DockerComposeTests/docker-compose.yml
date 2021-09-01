@@ -10,6 +10,10 @@ services:
       dockerfile: ./HttpToGrpcProxy/Dockerfile
     environment:
       - HTTP_PORTS=80
+      - HTTPS_PORTS=443
+      - HTTPS_CERTIFICATE_PASSWORD=1234
+    volumes:
+      - ./second.example.com.pfx:/app/https.pfx     # when HTTPS_PORTS are provided, this volume is required
     ports:
       #- "80:5000" # appearently there is no need to open http port, it is accessible inside docker compose
       - "6000:6000" # port for grpc client to connect
