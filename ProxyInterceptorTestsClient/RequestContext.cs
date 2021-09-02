@@ -27,7 +27,7 @@ namespace ProxyInterceptorTestsClient
         {
             this.grpcPromiseContext = grpcPromiseContext;
             this.responseFactory = responseFactory;
-            headers = new Lazy<Dictionary<string, string>>(() => grpcPromiseContext.Value.Headers.Values.ToDictionary(k => k.Key, v => v.Value));
+            headers = new Lazy<Dictionary<string, string>>(() => grpcPromiseContext.Value.Headers.ToDictionary(k => k.Key, v => v.Value));
         }
 
         /// <summary>

@@ -88,7 +88,7 @@ public class Program
             return;
         }
 
-        foreach (var header in response.Headers.Values)
+        foreach (var header in response.Headers)
         {
             httpResonse.Headers.Add(header.Key, header.Value);
         }
@@ -101,11 +101,10 @@ public class Program
             Route = httpRequest.RouteValues["route"].ToString(),
             Method = httpRequest.Method,
             Body = await GetBody(httpRequest),
-            ContentType = httpRequest.ContentType ?? "",
-            Headers = new Headers()
+            ContentType = httpRequest.ContentType ?? ""
         };
 
-        request.Headers.Values.Add(httpRequest.Headers.ToDictionary(h => h.Key, h => h.Value.ToString()));
+        request.Headers.Add(httpRequest.Headers.ToDictionary(h => h.Key, h => h.Value.ToString()));
 
         return request;
     }

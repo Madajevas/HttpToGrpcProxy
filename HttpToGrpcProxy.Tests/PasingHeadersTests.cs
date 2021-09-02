@@ -33,10 +33,8 @@ namespace HttpToGrpcProxy.Tests
         [Test, Order(2)]
         public async Task ResonseHeadersAreForwared()
         {
-            var response = new Response {
-                Route = "/headers",
-                HeadersDictionary = new Dictionary<string, string> { ["MAKE-YOUR-OWN-KIND-OF-MUSIC"] = "EVEN-IF-NOBODY-ELSE-SINGS-ALONG" }
-            };
+            var response = new Response();
+            response.Headers.Add(new Dictionary<string, string> { ["MAKE-YOUR-OWN-KIND-OF-MUSIC"] = "EVEN-IF-NOBODY-ELSE-SINGS-ALONG" });
 
             await requestContext.Respond(response);
 

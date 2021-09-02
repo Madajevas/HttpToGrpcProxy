@@ -6,21 +6,17 @@ service Proxy {
     rpc OnMessage (stream Response) returns (stream Request);
 }
 
-message Headers {
-    map<string, string> values = 1;
-}
-
 message Request {
     string route = 1;
     string method = 2;
     optional string body = 3;
     optional string contentType = 4;
-    Headers headers = 5;
+    map<string, string> headers = 5;
 }
 
 message Response {
     string route = 1;
     optional string body = 2;
     string contentType = 3;
-    Headers headers = 4;
+    map<string, string> headers = 4;
 }
