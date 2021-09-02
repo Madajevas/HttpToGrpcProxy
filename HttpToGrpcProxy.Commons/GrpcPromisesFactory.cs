@@ -42,7 +42,7 @@ namespace HttpToGrpcProxy.Commons
             this.writeStream = writeStream;
         }
 
-        public async Task<GrpcPromiseContext<TOut>> SendData(TIn value, CancellationToken cancellationToken)
+        public async Task<GrpcPromiseContext<TOut>> SendAndWaitForResonse(TIn value, CancellationToken cancellationToken)
         {
             await writeStream.WriteAsync(value);
 
@@ -50,6 +50,8 @@ namespace HttpToGrpcProxy.Commons
 
             return await this[value.GetRoute()].Task;
         }
+
+        public Task SendData(TIn value) => writeStream.WriteAsync(value);
 
         private async Task InitReader(IAsyncStreamReader<TOut> readStream, CancellationToken cancellationToken)
         {

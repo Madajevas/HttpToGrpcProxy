@@ -2,8 +2,6 @@
 
 using HttpToGrpcProxy.Commons;
 
-using System.Collections.Concurrent;
-
 namespace HttpToGrpcProxy.Services;
 
 /// <summary>
@@ -22,9 +20,9 @@ class ProxyService : Proxy.ProxyBase
     public override Task OnMessage(IAsyncStreamReader<Response> requestStream, IServerStreamWriter<Request> responseStream, ServerCallContext context)
     {
         logger.LogInformation("Grpc client connected");
-        (responseFactory, var awaiter) = GrpcPromisesFactory<Request, Response>.Initialize(responseStream, requestStream, context.CancellationToken);
+        (responseFactory, var readingTask) = GrpcPromisesFactory<Request, Response>.Initialize(responseStream, requestStream, context.CancellationToken);
 
-        return awaiter;
+        return readingTask;
     }
 
     public Task<GrpcPromiseContext<Response>> ForwardRequest(Request request, CancellationToken cancellationToken)
@@ -36,6 +34,6 @@ class ProxyService : Proxy.ProxyBase
 
         logger.LogInformation("Request received {Request}", request);
 
-        return responseFactory.SendData(request, cancellationToken);
+        return responseFactory.SendAndWaitForResonse(request, cancellationToken);
     }
 }

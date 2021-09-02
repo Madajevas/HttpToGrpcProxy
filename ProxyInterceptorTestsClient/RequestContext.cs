@@ -4,7 +4,6 @@ using HttpToGrpcProxy.Commons;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace ProxyInterceptorTestsClient
@@ -43,7 +42,7 @@ namespace ProxyInterceptorTestsClient
                 response.Route = Route;
             }
 
-            return responseFactory.SendData(response, default(CancellationToken));
+            return responseFactory.SendData(response);
         }
 
         public void Dispose() => grpcPromiseContext.Dispose();
