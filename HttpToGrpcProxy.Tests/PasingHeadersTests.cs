@@ -42,7 +42,7 @@ namespace HttpToGrpcProxy.Tests
 
             var httpResponse = await resultPromise;
 
-            var expectedHeader = httpResponse.Headers.Where(h => h.Name == "MAKE-YOUR-OWN-KIND-OF-MUSIC").FirstOrDefault();
+            var expectedHeader = httpResponse.Headers.First(h => h.Name == "MAKE-YOUR-OWN-KIND-OF-MUSIC");
             Assert.That(expectedHeader.Value, Is.EqualTo("EVEN-IF-NOBODY-ELSE-SINGS-ALONG"));
         }
     }

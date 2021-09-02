@@ -26,11 +26,10 @@ namespace HttpToGrpcProxy.Commons
             }
         }
 
-        public static (GrpcPromisesFactory<TIn, TOut>, Task) Initialize<TIn, TOut>(
+        public static (GrpcPromisesFactory<TIn, TOut>, Task) Initialize(
             IAsyncStreamWriter<TIn> writeStream,
             IAsyncStreamReader<TOut> readStream,
-            CancellationToken cancellationToken) where TOut : IRoute
-                                                 where TIn : IRoute
+            CancellationToken cancellationToken)
         {
             var factory = new GrpcPromisesFactory<TIn, TOut>(writeStream);
 

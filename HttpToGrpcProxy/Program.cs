@@ -67,7 +67,7 @@ public class Program
     private static async Task HandleRequest(HttpContext context, CancellationToken cancellationToken)
     {
         var logger = context.RequestServices.GetService<ILogger<Program>>();
-        logger.LogInformation("Request received {Path}", context.Request.Path);
+        logger?.LogInformation("Request received {Path}", context.Request.Path);
 
         var proxy = context.RequestServices.GetService<ProxyService>();
 
