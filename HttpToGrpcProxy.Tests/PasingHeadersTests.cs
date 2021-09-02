@@ -38,7 +38,7 @@ namespace HttpToGrpcProxy.Tests
                 HeadersDictionary = new Dictionary<string, string> { ["MAKE-YOUR-OWN-KIND-OF-MUSIC"] = "EVEN-IF-NOBODY-ELSE-SINGS-ALONG" }
             };
 
-            await Proxy.Respond(response);
+            await requestContext.Respond(response);
 
             var httpResponse = await resultPromise;
 

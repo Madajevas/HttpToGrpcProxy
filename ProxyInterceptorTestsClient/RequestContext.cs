@@ -4,13 +4,15 @@ using HttpToGrpcProxy.Commons;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace ProxyInterceptorTestsClient
 {
     public class RequestContext : IDisposable
     {
         private readonly GrpcPromiseContext<Request> grpcPromiseContext;
-
+        private readonly GrpcPromisesFactory<Response, Request> responseFactory;
         private Lazy<Dictionary<string, string>> headers;
         public Dictionary<string, string> Headers => headers.Value;
 
@@ -22,19 +24,28 @@ namespace ProxyInterceptorTestsClient
 
         public string Method => grpcPromiseContext.Value.Method;
 
-        private RequestContext(GrpcPromiseContext<Request> grpcPromiseContext)
+        internal RequestContext(GrpcPromiseContext<Request> grpcPromiseContext, GrpcPromisesFactory<Response, Request> responseFactory)
         {
             this.grpcPromiseContext = grpcPromiseContext;
-
+            this.responseFactory = responseFactory;
             headers = new Lazy<Dictionary<string, string>>(() => grpcPromiseContext.Value.Headers.Values.ToDictionary(k => k.Key, v => v.Value));
         }
 
-        public void Dispose() => grpcPromiseContext.Dispose();
-
-        public static implicit operator RequestContext(GrpcPromiseContext<Request> grpcPromiseContext)
+        /// <summary>
+        /// Respond to request in context. <see cref="Response.Route"/> can be omitted on response object
+        /// </summary>
+        /// <param name="response"></param>
+        /// <returns></returns>
+        public Task Respond(Response response)
         {
+            if (string.IsNullOrEmpty(response.Route))
+            {
+                response.Route = Route;
+            }
 
-            return new RequestContext(grpcPromiseContext);
+            return responseFactory.SendData(response, default(CancellationToken));
         }
+
+        public void Dispose() => grpcPromiseContext.Dispose();
     }
 }

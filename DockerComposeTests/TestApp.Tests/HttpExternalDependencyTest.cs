@@ -15,6 +15,7 @@ namespace TestApp.Tests
     {
         private RestClient restClient;
         private Task<IRestResponse> responsePromise;
+        private RequestContext requestContext;
 
         public HttpExternalDependencyTest() : base(new Uri("http://host.docker.internal:6000"))
         {
@@ -31,17 +32,17 @@ namespace TestApp.Tests
         public async Task WhenCalling_Endpoint_RequestIsCapturedByProxy()
         {
             responsePromise = restClient.ExecuteAsync(new RestRequest("/first"));
-            var request = await Proxy.InterceptRequest("/first");
+            requestContext = await Proxy.InterceptRequest("/first");
 
-            Assert.That(request.Method, Is.EqualTo("POST"));
-            Assert.That(request.Headers["Host"], Is.EqualTo("first.example.com"));
+            Assert.That(requestContext.Method, Is.EqualTo("POST"));
+            Assert.That(requestContext.Headers["Host"], Is.EqualTo("first.example.com"));
         }
 
         [Test, Order(2), Timeout(10_000)]
         public async Task WhenRespondingToRequest_ItIsReceivedBackAsHttpResponse()
         {
             var response = new Response { Route = "/first", Body = "response from test", ContentType = "text/plain" };
-            await Proxy.Respond(response);
+            await requestContext.Respond(response);
 
             var httpResponse = await responsePromise;
 

@@ -20,8 +20,8 @@ namespace HttpToGrpcProxy.Tests
             Assert.That(requestContext.Route, Is.EqualTo("anything/anywhere"));
 
             // respond to request, block
-            var response = new Response { Route = "anything/anywhere", Body = "responding from unit test", ContentType = "text/plain" };
-            await Proxy.Respond(response);
+            var response = new Response { Body = "responding from unit test", ContentType = "text/plain" };
+            await requestContext.Respond(response);
 
             // now wait for response to come back
             var httpResponse = await resultPromise;
@@ -39,8 +39,8 @@ namespace HttpToGrpcProxy.Tests
 
             Assert.That(requestContext.Route, Is.EqualTo("anything/anywhere"));
 
-            var response = new Response { Route = "anything/anywhere", Body = "new content", ContentType = "text/plain" };
-            await Proxy.Respond(response);
+            var response = new Response { Body = "new content", ContentType = "text/plain" };
+            await requestContext.Respond(response);
 
             var httpResponse = await resultPromise;
 

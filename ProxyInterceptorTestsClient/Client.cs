@@ -29,7 +29,9 @@ namespace ProxyInterceptorTestsClient
 
         public async Task<RequestContext> InterceptRequest(string route)
         {
-            return await responseFactory[route].Task;
+            var grpcPromiseContext = await responseFactory[route].Task;
+
+            return new RequestContext(grpcPromiseContext, responseFactory);
         }
 
         public Task<GrpcPromiseContext<Request>> InterceptRequest(string route, TimeSpan timeout)
@@ -39,8 +41,6 @@ namespace ProxyInterceptorTestsClient
 
             return responseFactory[route].Task;
         }
-
-        public Task Respond(Response response) => responseFactory.SendData(response, default(CancellationToken));
 
         public void Dispose()
         {
