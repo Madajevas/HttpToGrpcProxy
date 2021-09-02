@@ -21,7 +21,7 @@ namespace HttpToGrpcProxy.Tests
         public void InitializeHttpClientAndProxyServer()
         {
             app = Program.CreateApplication(Array.Empty<string>());
-            app.RunAsync();
+            app.RunAsync().ContinueWith(t => System.Diagnostics.Debugger.Break());
 
             HttpClient = new RestClient("http://localhost:5000");
             HttpClient.AddHandler("text/plain", new TextPlainDeserializer());

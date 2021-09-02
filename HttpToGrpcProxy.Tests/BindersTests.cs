@@ -26,7 +26,7 @@ namespace HttpToGrpcProxy.Tests
 
             using var requestContext = await Proxy.InterceptRequest("anything/json");
 
-            Assert.That(requestContext.Value.ContentType, Is.EqualTo("application/json"));
+            Assert.That(requestContext.ContentType, Is.EqualTo("application/json"));
 
             var receivedModel = requestContext.BindJson<JsonBinding>();
 

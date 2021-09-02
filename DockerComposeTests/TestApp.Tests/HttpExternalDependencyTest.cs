@@ -33,8 +33,8 @@ namespace TestApp.Tests
             responsePromise = restClient.ExecuteAsync(new RestRequest("/first"));
             var request = await Proxy.InterceptRequest("/first");
 
-            Assert.That(request.Value.Method, Is.EqualTo("POST"));
-            Assert.That(request.Value.Headers.Values["Host"], Is.EqualTo("first.example.com"));
+            Assert.That(request.Method, Is.EqualTo("POST"));
+            Assert.That(request.Headers["Host"], Is.EqualTo("first.example.com"));
         }
 
         [Test, Order(2), Timeout(10_000)]

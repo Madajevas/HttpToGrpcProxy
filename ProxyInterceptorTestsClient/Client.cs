@@ -27,9 +27,9 @@ namespace ProxyInterceptorTestsClient
             (responseFactory, _) = GrpcPromisesFactory<Response, Request>.Initialize(handle.RequestStream, handle.ResponseStream, stopTokenSource.Token);
         }
 
-        public Task<GrpcPromiseContext<Request>> InterceptRequest(string route)
+        public async Task<RequestContext> InterceptRequest(string route)
         {
-            return responseFactory[route].Task;
+            return await responseFactory[route].Task;
         }
 
         public Task<GrpcPromiseContext<Request>> InterceptRequest(string route, TimeSpan timeout)

@@ -1,6 +1,6 @@
-﻿using HttpToGrpcProxy.Commons;
+﻿using NUnit.Framework;
 
-using NUnit.Framework;
+using ProxyInterceptorTestsClient;
 
 using RestSharp;
 
@@ -9,7 +9,7 @@ namespace HttpToGrpcProxy.Tests
     public class PasingHeadersTests : IntegrationTestsBase
     {
         private Task<IRestResponse> resultPromise;
-        private GrpcPromiseContext<Request> requestContext;
+        private RequestContext requestContext;
 
         [OneTimeTearDown]
         public void Dispose()
@@ -26,8 +26,8 @@ namespace HttpToGrpcProxy.Tests
 
             requestContext = await Proxy.InterceptRequest("/headers");
 
-            Assert.That(requestContext.Value.Headers.Values.Count, Is.GreaterThan(1));
-            Assert.That(requestContext.Value.Headers.Values["YOU-GOTTA-MAKE-YOUR-OWN-KIND-OF-MUSIC"], Is.EqualTo("SING-YOUR-OWN-SPECIAL-SONGS"));
+            Assert.That(requestContext.Headers.Count, Is.GreaterThan(1));
+            Assert.That(requestContext.Headers["YOU-GOTTA-MAKE-YOUR-OWN-KIND-OF-MUSIC"], Is.EqualTo("SING-YOUR-OWN-SPECIAL-SONGS"));
         }
 
         [Test, Order(2)]
