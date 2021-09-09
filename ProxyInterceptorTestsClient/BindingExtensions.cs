@@ -32,5 +32,25 @@ namespace ProxyInterceptorTestsClient
 
             return instance;
         }
+
+        public static T BindHeaders<T>(this RequestContext requestContext) where T : new()
+        {
+            var properties = typeof(T).GetProperties().ToDictionary(p => p.Name.ToLower(), p => p);
+
+            var instance = new T();
+
+            foreach (var (key, value) in requestContext.Headers)
+            {
+                if (!properties.TryGetValue(key.ToLower(), out var property))
+                {
+                    continue;
+                }
+
+                var convertedValue = Convert.ChangeType(value, property.PropertyType);
+                property.SetValue(instance, convertedValue);
+            }
+
+            return instance;
+        }
     }
 }
