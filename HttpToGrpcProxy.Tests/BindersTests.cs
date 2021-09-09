@@ -66,5 +66,18 @@ namespace HttpToGrpcProxy.Tests
             Assert.That(receivedModel.Id, Is.EqualTo(42));
             Assert.That(receivedModel.Name, Is.EqualTo("test"));
         }
+
+        [Test]
+        public async Task CanBindQueryToClass()
+        {
+            var request = new RestRequest("binding/query?id=42&name=test");
+            var _ = HttpClient.GetAsync<string>(request);
+
+            using var requestContext = await Proxy.InterceptRequest("binding/query");
+            var receivedModel = requestContext.BindQuery<Model>();
+
+            Assert.That(receivedModel.Id, Is.EqualTo(42));
+            Assert.That(receivedModel.Name, Is.EqualTo("test"));
+        }
     }
 }

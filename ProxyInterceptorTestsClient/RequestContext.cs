@@ -21,6 +21,9 @@ namespace ProxyInterceptorTestsClient
 
         public string Body => grpcPromiseContext.Value.Body;
 
+        private Lazy<Dictionary<string, string>> query;
+        public Dictionary<string, string> Query => query.Value;
+
         public string Method => grpcPromiseContext.Value.Method;
 
         internal RequestContext(GrpcPromiseContext<Request> grpcPromiseContext, GrpcPromisesFactory<Response, Request> responseFactory)
@@ -28,6 +31,7 @@ namespace ProxyInterceptorTestsClient
             this.grpcPromiseContext = grpcPromiseContext;
             this.responseFactory = responseFactory;
             headers = new Lazy<Dictionary<string, string>>(() => grpcPromiseContext.Value.Headers.ToDictionary(k => k.Key, v => v.Value));
+            query = new Lazy<Dictionary<string, string>>(() => grpcPromiseContext.Value.Query.ToDictionary(k => k.Key, v => v.Value));
         }
 
         /// <summary>

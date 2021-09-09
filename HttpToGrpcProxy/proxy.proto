@@ -12,6 +12,7 @@ message Request {
     optional string body = 3;
     optional string contentType = 4;
     map<string, string> headers = 5;
+    map<string, string> query = 6;
 }
 
 message Response {

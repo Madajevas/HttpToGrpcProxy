@@ -105,6 +105,7 @@ public class Program
         };
 
         request.Headers.Add(httpRequest.Headers.ToDictionary(h => h.Key, h => h.Value.ToString()));
+        request.Query.Add(httpRequest.Query.ToDictionary(q => q.Key, q => q.Value.ToString()));
 
         return request;
     }
