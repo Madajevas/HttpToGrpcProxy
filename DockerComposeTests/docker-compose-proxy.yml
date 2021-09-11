@@ -23,14 +23,3 @@ services:
         aliases:
           - first.example.com       # make some aliases so request from test_app would be captured by proxy
           - second.example.com
-
-  test_app:
-    build:
-      context: ./
-      dockerfile: ./TestApp/Dockerfile
-    ports:
-      - "8080:80"
-    networks:
-      test_network:
-        aliases:
-          - just_tests

@@ -1,0 +1,16 @@
+version: '3.9'
+
+networks:
+  test_network:
+
+services:
+  test_app:
+    build:
+      context: ./
+      dockerfile: ./TestApp/Dockerfile
+    ports:
+      - "8080:80"
+    networks:
+      test_network:
+        aliases:
+          - just_tests

@@ -21,7 +21,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestApp", "DockerComposeTes
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DockerComposeTests", "DockerComposeTests", "{568E14D4-1406-463F-9EB4-8EFECA967A3D}"
 	ProjectSection(SolutionItems) = preProject
-		DockerComposeTests\docker-compose.yml = DockerComposeTests\docker-compose.yml
+		docker-compose-proxy.yml = docker-compose-proxy.yml
+		DockerComposeTests\docker-compose-services.yml = DockerComposeTests\docker-compose-services.yml
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestApp.Tests", "DockerComposeTests\TestApp.Tests\TestApp.Tests.csproj", "{66F1ADB7-5907-4F1A-A7FC-9FBF6B8D0620}"
