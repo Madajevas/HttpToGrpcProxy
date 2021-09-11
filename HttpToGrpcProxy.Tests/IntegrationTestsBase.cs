@@ -1,12 +1,15 @@
 ﻿using HttpToGrpcProxy.Tests.Deserializers;
 
 using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.DependencyInjection;
 
 using NUnit.Framework;
 
 using ProxyInterceptorTestsClient;
 
 using RestSharp;
+using HttpToGrpcProxy.Tests.Logging;
 
 namespace HttpToGrpcProxy.Tests
 {
@@ -20,7 +23,10 @@ namespace HttpToGrpcProxy.Tests
         [OneTimeSetUp]
         public void InitializeHttpClientAndProxyServer()
         {
-            app = Program.CreateApplication(Array.Empty<string>());
+            var builder = Program.CreateBuilder(Array.Empty<string>());
+            builder.Services.AddSingleton<ILoggerProvider, ProxyErrorLoggerProvider>();
+
+            app = builder.CreateApplication();
             app.RunAsync().ContinueWith(t => System.Diagnostics.Debugger.Break());
 
             HttpClient = new RestClient("http://localhost:5000");
