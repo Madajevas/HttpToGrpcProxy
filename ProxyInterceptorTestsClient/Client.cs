@@ -34,12 +34,14 @@ namespace ProxyInterceptorTestsClient
             return new RequestContext(grpcPromiseContext, responseFactory);
         }
 
-        public Task<GrpcPromiseContext<Request>> InterceptRequest(string route, TimeSpan timeout)
+        public async Task<RequestContext> InterceptRequest(string route, TimeSpan timeout)
         {
             var cancellationSource = new CancellationTokenSource(timeout);
             cancellationSource.Token.Register(() => responseFactory[route].SetCanceled());
 
-            return responseFactory[route].Task;
+            var grpcPromiseContext = await responseFactory[route].Task;
+
+            return new RequestContext(grpcPromiseContext, responseFactory);
         }
 
         public void Dispose()
