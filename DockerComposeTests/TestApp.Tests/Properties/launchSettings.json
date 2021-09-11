@@ -1,10 +1,10 @@
 {
-  //"profiles": {
-  //  "TestApp.Tests": {
-  //    "commandName": "Project"
-  //  },
-  //  "Docker": {
-  //    "commandName": "Docker"
-  //  }
-  //}
+  "profiles": {
+    "TestApp.Tests": {
+      "commandName": "Project"
+    },
+    "Docker": {
+      "commandName": "Docker"
+    }
+  }
 }
