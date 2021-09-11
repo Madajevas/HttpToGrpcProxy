@@ -5,14 +5,20 @@ using Microsoft.AspNetCore.Server.Kestrel.Core;
 
 using System.Net;
 
-public class Program
+public static class Program
 {
+    private static ILogger logger;
+
     public static Task Main(string[] args)
     {
-        return CreateApplication(args).RunAsync();
+        logger = LoggerFactory
+            .Create(logging => logging.AddConsole())
+            .CreateLogger("Program");
+
+        return CreateBuilder(args).CreateApplication().RunAsync();
     }
 
-    public static WebApplication CreateApplication(string[] args)
+    public static WebApplicationBuilder CreateBuilder(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
 
@@ -47,6 +53,11 @@ public class Program
         builder.Services.AddRouting();
         builder.Services.AddControllers();
 
+        return builder;
+    }
+
+    public static WebApplication CreateApplication(this WebApplicationBuilder builder)
+    {
         var app = builder.Build();
 
         // Configure the HTTP request pipeline.
@@ -66,7 +77,6 @@ public class Program
 
     private static async Task HandleRequest(HttpContext context, CancellationToken cancellationToken)
     {
-        var logger = context.RequestServices.GetService<ILogger<Program>>();
         logger?.LogInformation("Request received {Path}", context.Request.Path);
 
         var proxy = context.RequestServices.GetService<ProxyService>();
