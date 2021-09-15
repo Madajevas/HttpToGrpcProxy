@@ -3,7 +3,7 @@
 using System;
 using System.Management.Automation;
 
-namespace HttpToGrpcProxy.Poweshell
+namespace HttpToGrpcProxy.Powershell
 {
     [Cmdlet("Init", "Client")]
     [OutputType(typeof(Client))]
