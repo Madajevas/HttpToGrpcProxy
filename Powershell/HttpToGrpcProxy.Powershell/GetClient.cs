@@ -5,9 +5,9 @@ using System.Management.Automation;
 
 namespace HttpToGrpcProxy.Powershell
 {
-    [Cmdlet("Init", "Client")]
+    [Cmdlet(VerbsCommon.Get, "Client")]
     [OutputType(typeof(Client))]
-    public class InitClient : PSCmdlet
+    public class GetClient : PSCmdlet
     {
         [Parameter(Mandatory = true)]
         public Uri ProxyAddress { get; set; }

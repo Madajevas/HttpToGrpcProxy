@@ -8,9 +8,9 @@ using static HttpToGrpcProxy.Powershell.ConsoleHelpers;
 
 namespace HttpToGrpcProxy.Powershell
 {
-    [Cmdlet("Intercept", "Request")]
+    [Cmdlet(VerbsCommon.Get, "InterceptedRequest")]
     [OutputType(typeof(RequestContext))]
-    public class InterceptRequest : PSCmdlet
+    public class GetInterceptedRequest : PSCmdlet
     {
         [Parameter(Mandatory = true)]
         public Client ProxyClient { get; set; }
