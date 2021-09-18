@@ -10,6 +10,8 @@ using ProxyInterceptorTestsClient;
 
 using RestSharp;
 using HttpToGrpcProxy.Tests.Logging;
+using System.Threading.Tasks;
+using System;
 
 namespace HttpToGrpcProxy.Tests
 {

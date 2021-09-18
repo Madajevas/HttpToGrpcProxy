@@ -3,6 +3,7 @@
 using System.Text.Json;
 using RestSharp;
 using ProxyInterceptorTestsClient;
+using System.Threading.Tasks;
 
 namespace HttpToGrpcProxy.Tests
 {

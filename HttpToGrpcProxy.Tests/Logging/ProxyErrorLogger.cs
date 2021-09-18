@@ -2,6 +2,8 @@
 
 using NUnit.Framework;
 
+using System;
+
 namespace HttpToGrpcProxy.Tests.Logging
 {
     class ProxyErrorLogger : ILogger

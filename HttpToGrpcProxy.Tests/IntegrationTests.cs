@@ -2,6 +2,8 @@
 
 using RestSharp;
 
+using System.Threading.Tasks;
+
 namespace HttpToGrpcProxy.Tests
 {
     public class IntegrationTests : IntegrationTestsBase

@@ -1,5 +1,8 @@
 ﻿using NUnit.Framework;
 
+using System;
+using System.Threading.Tasks;
+
 namespace HttpToGrpcProxy.Tests
 {
     public class TimeoutTests : IntegrationTestsBase
