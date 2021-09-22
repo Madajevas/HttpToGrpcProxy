@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace ProxyInterceptorTestsClient
 {
-    public interface IClient : IDisposable
+    public interface IClient : IAsyncDisposable
     {
         Task<IRequestContext> InterceptRequest(string route, CancellationToken cancellationToken = default);
         Task<IRequestContext> InterceptRequest(string route, TimeSpan timeout);
@@ -21,10 +21,11 @@ namespace ProxyInterceptorTestsClient
         private AsyncDuplexStreamingCall<Response, Request> handle;
         private CancellationTokenSource stopTokenSource;
         private GrpcPromisesFactory<Response, Request> responseFactory;
+        private GrpcChannel channel;
 
         public Client(Uri proxyAddress)
         {
-            var channel = GrpcChannel.ForAddress(proxyAddress);
+            channel = GrpcChannel.ForAddress(proxyAddress);
             var grpcClient = new Proxy.ProxyClient(channel);
             handle = grpcClient.OnMessage();
 
@@ -49,10 +50,12 @@ namespace ProxyInterceptorTestsClient
             return InterceptRequest(route, cancellationSource.Token);
         }
 
-        public void Dispose()
+        public async ValueTask DisposeAsync()
         {
             stopTokenSource.Cancel();
             handle.Dispose();
+
+            await channel.ShutdownAsync();
         }
     }
 }

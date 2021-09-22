@@ -1,6 +1,7 @@
 ﻿using NUnit.Framework;
 
 using System;
+using System.Threading.Tasks;
 
 namespace ProxyInterceptorTestsClient
 {
@@ -22,9 +23,9 @@ namespace ProxyInterceptorTestsClient
         }
 
         [OneTimeTearDown]
-        public void DisconnectClient()
+        public async Task DisconnectClient()
         {
-            Proxy.Dispose();
+            await Proxy.DisposeAsync();
         }
     }
 }
