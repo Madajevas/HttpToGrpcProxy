@@ -13,7 +13,7 @@ namespace HttpToGrpcProxy.Tests
     public class PasingHeadersTests : IntegrationTestsBase
     {
         private Task<IRestResponse> resultPromise;
-        private RequestContext requestContext;
+        private IRequestContext requestContext;
 
         [OneTimeTearDown]
         public void Dispose()

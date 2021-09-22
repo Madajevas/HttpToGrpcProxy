@@ -8,12 +8,12 @@ namespace ProxyInterceptorTestsClient
 {
     public static class BindingExtensions
     {
-        public static T BindJson<T>(this RequestContext requestContext)
+        public static T BindJson<T>(this IRequestContext requestContext)
         {
             return JsonSerializer.Deserialize<T>(requestContext.Body);
         }
 
-        public static T BindForm<T>(this RequestContext requestContext) where T : new()
+        public static T BindForm<T>(this IRequestContext requestContext) where T : new()
         {
             var properties = typeof(T).GetProperties().ToDictionary(p => p.Name.ToLower(), p => p);
             var form = HttpUtility.ParseQueryString(requestContext.Body);
@@ -33,7 +33,7 @@ namespace ProxyInterceptorTestsClient
             return instance;
         }
 
-        public static T BindHeaders<T>(this RequestContext requestContext) where T : new()
+        public static T BindHeaders<T>(this IRequestContext requestContext) where T : new()
         {
             var properties = typeof(T).GetProperties().ToDictionary(p => p.Name.ToLower(), p => p);
             var instance = new T();
@@ -43,7 +43,7 @@ namespace ProxyInterceptorTestsClient
             return instance;
         }
 
-        public static T BindQuery<T>(this RequestContext requestContext) where T : new()
+        public static T BindQuery<T>(this IRequestContext requestContext) where T : new()
         {
             var properties = typeof(T).GetProperties().ToDictionary(p => p.Name.ToLower(), p => p);
             var instance = new T();

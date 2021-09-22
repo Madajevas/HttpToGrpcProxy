@@ -10,7 +10,13 @@ using System.Threading.Tasks;
 
 namespace ProxyInterceptorTestsClient
 {
-    public class Client : IDisposable
+    public interface IClient : IDisposable
+    {
+        Task<IRequestContext> InterceptRequest(string route, CancellationToken cancellationToken = default);
+        Task<IRequestContext> InterceptRequest(string route, TimeSpan timeout);
+    }
+
+    public class Client : IClient
     {
         private AsyncDuplexStreamingCall<Response, Request> handle;
         private CancellationTokenSource stopTokenSource;
@@ -27,7 +33,7 @@ namespace ProxyInterceptorTestsClient
             (responseFactory, _) = GrpcPromisesFactory<Response, Request>.Initialize(handle.RequestStream, handle.ResponseStream, stopTokenSource.Token);
         }
 
-        public async Task<RequestContext> InterceptRequest(string route, CancellationToken cancellationToken = default)
+        public async Task<IRequestContext> InterceptRequest(string route, CancellationToken cancellationToken = default)
         {
             cancellationToken.Register(() => responseFactory[route].SetCanceled());
 
@@ -36,7 +42,7 @@ namespace ProxyInterceptorTestsClient
             return new RequestContext(grpcPromiseContext, responseFactory);
         }
 
-        public Task<RequestContext> InterceptRequest(string route, TimeSpan timeout)
+        public Task<IRequestContext> InterceptRequest(string route, TimeSpan timeout)
         {
             var cancellationSource = new CancellationTokenSource(timeout);
 

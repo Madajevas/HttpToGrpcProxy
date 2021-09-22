@@ -8,7 +8,19 @@ using System.Threading.Tasks;
 
 namespace ProxyInterceptorTestsClient
 {
-    public class RequestContext : IDisposable
+    public interface IRequestContext : IDisposable
+    {
+        string Body { get; }
+        string ContentType { get; }
+        Dictionary<string, string> Headers { get; }
+        string Method { get; }
+        Dictionary<string, string> Query { get; }
+        string Route { get; }
+
+        Task Respond(Response response);
+    }
+
+    public class RequestContext : IRequestContext
     {
         private readonly GrpcPromiseContext<Request> grpcPromiseContext;
         private readonly GrpcPromisesFactory<Response, Request> responseFactory;

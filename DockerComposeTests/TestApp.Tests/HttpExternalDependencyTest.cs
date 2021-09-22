@@ -15,7 +15,7 @@ namespace TestApp.Tests
     {
         private RestClient restClient;
         private Task<IRestResponse> responsePromise;
-        private RequestContext requestContext;
+        private IRequestContext requestContext;
 
         public HttpExternalDependencyTest() : base(new Uri("http://host.docker.internal:6000"))
         {
