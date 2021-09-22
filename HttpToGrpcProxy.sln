@@ -31,6 +31,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Powershell", "Powershell", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HttpToGrpcProxy.Powershell", "Powershell\HttpToGrpcProxy.Powershell\HttpToGrpcProxy.Powershell.csproj", "{FCD50107-55E5-4B94-9FE3-10C366F141FF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HttpToGrpcProxy.Powershell.Tests", "HttpToGrpcProxy.Powershell.Tests\HttpToGrpcProxy.Powershell.Tests.csproj", "{D53E3BE8-DDB3-4F66-867A-0D24227DBAFF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -65,6 +67,10 @@ Global
 		{FCD50107-55E5-4B94-9FE3-10C366F141FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FCD50107-55E5-4B94-9FE3-10C366F141FF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FCD50107-55E5-4B94-9FE3-10C366F141FF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D53E3BE8-DDB3-4F66-867A-0D24227DBAFF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D53E3BE8-DDB3-4F66-867A-0D24227DBAFF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D53E3BE8-DDB3-4F66-867A-0D24227DBAFF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D53E3BE8-DDB3-4F66-867A-0D24227DBAFF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -73,6 +79,7 @@ Global
 		{B22ECBC0-6F5F-4C65-961D-252B5797E463} = {568E14D4-1406-463F-9EB4-8EFECA967A3D}
 		{66F1ADB7-5907-4F1A-A7FC-9FBF6B8D0620} = {568E14D4-1406-463F-9EB4-8EFECA967A3D}
 		{FCD50107-55E5-4B94-9FE3-10C366F141FF} = {A45A8FF3-0844-4345-84D1-CBB34FF12DAE}
+		{D53E3BE8-DDB3-4F66-867A-0D24227DBAFF} = {A45A8FF3-0844-4345-84D1-CBB34FF12DAE}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {17F3074E-2A9C-443B-9AC9-5F0CEC5CC05E}
