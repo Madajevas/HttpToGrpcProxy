@@ -7,7 +7,7 @@ namespace HttpToGrpcProxy.Powershell
 {
     [Cmdlet(VerbsCommon.Get, "Client")]
     [OutputType(typeof(Client))]
-    public class GetClient : PSCmdlet
+    public class GetClient : Cmdlet
     {
         [Parameter(Mandatory = true)]
         public Uri ProxyAddress { get; set; }
