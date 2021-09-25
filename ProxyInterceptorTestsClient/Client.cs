@@ -23,6 +23,8 @@ namespace ProxyInterceptorTestsClient
         private GrpcPromisesFactory<Response, Request> responseFactory;
         private GrpcChannel channel;
 
+        private Exception failure;
+
         public Client(Uri proxyAddress)
         {
             channel = GrpcChannel.ForAddress(proxyAddress);
@@ -42,6 +44,7 @@ namespace ProxyInterceptorTestsClient
             {
                 if (t.IsFaulted)
                 {
+                    failure = t.Exception;
                     responseFactory.CancelAll(t.Exception);
                 }
             });
@@ -49,6 +52,11 @@ namespace ProxyInterceptorTestsClient
 
         public async Task<IRequestContext> InterceptRequest(string route, CancellationToken cancellationToken = default)
         {
+            if (failure is not null)
+            {
+                throw failure;
+            }
+
             cancellationToken.Register(() => responseFactory[route].SetCanceled());
 
             var grpcPromiseContext = await responseFactory[route].Task;

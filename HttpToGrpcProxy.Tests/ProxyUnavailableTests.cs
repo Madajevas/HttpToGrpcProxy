@@ -12,13 +12,13 @@ namespace HttpToGrpcProxy.Tests
     {
         private Client client;
 
-        [SetUp]
+        [OneTimeSetUp]
         public void SetUp()
         {
             client = new Client(new Uri("http://localhost:6666"));
         }
 
-        [Test]
+        [Test, Order(1)]
         public void InterceptRequest_WhenServerIsNotAvailable_Throws()
         {
             var aggregateException = Assert.ThrowsAsync<AggregateException>(() => client.InterceptRequest("notavailable"));
@@ -29,6 +29,12 @@ namespace HttpToGrpcProxy.Tests
             }
 
             Assert.That(rpcException.StatusCode, Is.EqualTo(StatusCode.Unavailable));
+        }
+
+        [Test, Order(2)]
+        public void InterceptRequest_OnSubsequentRequests_Throws()
+        {
+            Assert.ThrowsAsync<AggregateException>(() => client.InterceptRequest("notavailable"));
         }
     }
 }
