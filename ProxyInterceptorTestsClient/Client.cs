@@ -29,9 +29,22 @@ namespace ProxyInterceptorTestsClient
             var grpcClient = new Proxy.ProxyClient(channel);
             handle = grpcClient.OnMessage();
 
+            CancelPromisesOnConnectionFailure();
+
             stopTokenSource = new CancellationTokenSource();
 
             (responseFactory, _) = GrpcPromisesFactory<Response, Request>.Initialize(handle.RequestStream, handle.ResponseStream, stopTokenSource.Token);
+        }
+
+        private void CancelPromisesOnConnectionFailure()
+        {
+            handle.RequestStream.WriteAsync(new Response()).ContinueWith(t =>
+            {
+                if (t.IsFaulted)
+                {
+                    responseFactory.CancelAll(t.Exception);
+                }
+            });
         }
 
         public async Task<IRequestContext> InterceptRequest(string route, CancellationToken cancellationToken = default)

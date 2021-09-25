@@ -1,13 +1,17 @@
 ﻿using Grpc.Core;
 
+using System;
+using System.Collections;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace HttpToGrpcProxy.Commons
 {
-    public class GrpcPromisesFactory<TIn, TOut> where TOut : IRoute
-                                         where TIn : IRoute
+    public class GrpcPromisesFactory<TIn, TOut>
+        where TOut : IRoute
+        where TIn : IRoute
     {
         private IAsyncStreamWriter<TIn> writeStream;
         private ConcurrentDictionary<string, TaskCompletionSource<GrpcPromiseContext<TOut>>> promises = new ConcurrentDictionary<string, TaskCompletionSource<GrpcPromiseContext<TOut>>>();
@@ -51,6 +55,15 @@ namespace HttpToGrpcProxy.Commons
         }
 
         public Task SendData(TIn value) => writeStream.WriteAsync(value);
+
+        public void CancelAll(Exception ex)
+        {
+            foreach (var (route, promise) in promises)
+            {
+                promise.TrySetException(ex);
+                promises.TryRemove(route, out var _);
+            }
+        }
 
         private async Task InitReader(IAsyncStreamReader<TOut> readStream, CancellationToken cancellationToken)
         {
