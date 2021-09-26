@@ -56,7 +56,7 @@ RUN cat ./second.example.com.crt >> /etc/ssl/certs/ca-certificates.crt
 ### 6. Build and start proxy and test app (which will be trying to call external urls)
 ```powershell
 docker compose -f .\DockerComposeTests\docker-compose-services.yml -f .\DockerComposeTests\docker-compose-proxy.yml build
-docker compose -f .\DockerComposeTests\docker-compose-services.yml -f .\DockerComposeTests\docker-compose-proxy.yml -d up
+docker compose -f .\DockerComposeTests\docker-compose-services.yml -f .\DockerComposeTests\docker-compose-proxy.yml up -d
 ```
 
 ### 7. Run tests in docker build
