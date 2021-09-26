@@ -18,7 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Powershell\HttpToGrpcProxy.Powershell\HttpToGrpcProxy.Powershell.csproj" />
+    <ProjectReference Include="..\HttpToGrpcProxy.Powershell\HttpToGrpcProxy.Powershell.csproj" />
   </ItemGroup>
 
 </Project>

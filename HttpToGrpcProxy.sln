@@ -31,7 +31,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Powershell", "Powershell", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HttpToGrpcProxy.Powershell", "Powershell\HttpToGrpcProxy.Powershell\HttpToGrpcProxy.Powershell.csproj", "{FCD50107-55E5-4B94-9FE3-10C366F141FF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HttpToGrpcProxy.Powershell.Tests", "HttpToGrpcProxy.Powershell.Tests\HttpToGrpcProxy.Powershell.Tests.csproj", "{D53E3BE8-DDB3-4F66-867A-0D24227DBAFF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HttpToGrpcProxy.Powershell.Tests", "Powershell\HttpToGrpcProxy.Powershell.Tests\HttpToGrpcProxy.Powershell.Tests.csproj", "{D53E3BE8-DDB3-4F66-867A-0D24227DBAFF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
