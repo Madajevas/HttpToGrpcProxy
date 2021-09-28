@@ -31,7 +31,16 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Powershell", "Powershell", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HttpToGrpcProxy.Powershell", "Powershell\HttpToGrpcProxy.Powershell\HttpToGrpcProxy.Powershell.csproj", "{FCD50107-55E5-4B94-9FE3-10C366F141FF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HttpToGrpcProxy.Powershell.Tests", "Powershell\HttpToGrpcProxy.Powershell.Tests\HttpToGrpcProxy.Powershell.Tests.csproj", "{D53E3BE8-DDB3-4F66-867A-0D24227DBAFF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HttpToGrpcProxy.Powershell.Tests", "Powershell\HttpToGrpcProxy.Powershell.Tests\HttpToGrpcProxy.Powershell.Tests.csproj", "{D53E3BE8-DDB3-4F66-867A-0D24227DBAFF}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Scripts", "Scripts", "{65A54AB8-B208-4136-A296-2E40532BE358}"
+	ProjectSection(SolutionItems) = preProject
+		Powershell\Scripts\develop.Steps.ps1 = Powershell\Scripts\develop.Steps.ps1
+		Powershell\Scripts\docker.Steps.ps1 = Powershell\Scripts\docker.Steps.ps1
+		Powershell\Scripts\http.Steps.ps1 = Powershell\Scripts\http.Steps.ps1
+		Powershell\Scripts\test.feature = Powershell\Scripts\test.feature
+		Powershell\Scripts\test.ps1 = Powershell\Scripts\test.ps1
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -80,6 +89,7 @@ Global
 		{66F1ADB7-5907-4F1A-A7FC-9FBF6B8D0620} = {568E14D4-1406-463F-9EB4-8EFECA967A3D}
 		{FCD50107-55E5-4B94-9FE3-10C366F141FF} = {A45A8FF3-0844-4345-84D1-CBB34FF12DAE}
 		{D53E3BE8-DDB3-4F66-867A-0D24227DBAFF} = {A45A8FF3-0844-4345-84D1-CBB34FF12DAE}
+		{65A54AB8-B208-4136-A296-2E40532BE358} = {A45A8FF3-0844-4345-84D1-CBB34FF12DAE}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {17F3074E-2A9C-443B-9AC9-5F0CEC5CC05E}
