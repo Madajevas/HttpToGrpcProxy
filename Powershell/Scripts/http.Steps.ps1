@@ -9,6 +9,11 @@ Given 'proxy client is connected to (?<Address>.*)' {
     $Script:client = Get-Client -ProxyAddress $Address
 }
 
+Given 'http requests proxied through (?<Address>.*)' {
+    param($Address)
+    $Global:proxyAddress = $Address
+}
+
 Function Global:Invoke-RestMethodAsync {
     param($Uri, $Method, $Body, $ContentType)
 
@@ -16,6 +21,7 @@ Function Global:Invoke-RestMethodAsync {
         Uri = $Uri
         Method = $Method
         ContentType = $ContentType
+        Proxy = $Global:proxyAddress
     }
 
     if ($Method -match "(POST|PUT|PATCH)") {
@@ -27,7 +33,7 @@ Function Global:Invoke-RestMethodAsync {
         $input.MoveNext() | Out-Null
         $args = $input.Current
 
-        Invoke-RestMethod @args -Proxy http://localhost:8888
+        Invoke-RestMethod @args
     } -InputObject $invokeArgs
 }
 

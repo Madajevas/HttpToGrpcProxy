@@ -3,6 +3,7 @@ Feature: Proxy is available in powershell
 Background: There is a service running
     Given service is running on http://local.host:5000 base address
     And proxy client is connected to http://localhost:6000
+    # And http requests proxied through http://localhost:8888
 
 Scenario: Round trip is sound
     When request GET /first is made

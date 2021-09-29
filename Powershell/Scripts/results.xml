@@ -1,0 +1,91 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<test-results xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="nunit_schema_2.5.xsd" name="Pester" total="14" errors="0" failures="0" not-run="0" inconclusive="0" ignored="0" skipped="0" invalid="0" date="2021-09-29" time="22:51:50">
+  <environment os-version="10.0.19043" platform="Microsoft Windows 10 Pro|C:\Windows|\Device\Harddisk0\Partition3" machine-name="DESKTOP-TFDFALC" cwd="C:\Users\tomas\source\repos\HttpToGrpcProxy\Powershell\Scripts" clr-version="Unknown" nunit-version="2.5.8.0" user-domain="DESKTOP-TFDFALC" user="tomas" />
+  <culture-info current-culture="en-US" current-uiculture="en-US" />
+  <test-suite type="TestFixture" name="Pester" executed="True" result="Success" success="True" time="4.9702" asserts="0" description="Pester">
+    <results>
+      <test-suite type="TestFixture" name="C:\Users\tomas\source\repos\HttpToGrpcProxy\Powershell\Scripts\test.feature" executed="True" result="Success" success="True" time="0" asserts="0" description="C:\Users\tomas\source\repos\HttpToGrpcProxy\Powershell\Scripts\test.feature">
+        <results>
+          <test-suite type="TestFixture" name="Round trip is sound" executed="True" result="Success" success="True" time="0" asserts="0" description="Round trip is sound">
+            <results>
+              <test-suite type="ParameterizedTest" name="Round trip is sound..\http.Steps.ps1: line 1" executed="True" result="Success" success="True" time="0.0012" asserts="0" description=".\http.Steps.ps1: line 1">
+                <results>
+                  <test-case description="Given service is running on http://local.host:5000 base address" name="Round trip is sound.Given service is running on http://local.host:5000 base address" time="0.0012" asserts="0" success="True" result="Success" executed="True" />
+                </results>
+              </test-suite>
+              <test-suite type="ParameterizedTest" name="Round trip is sound..\http.Steps.ps1: line 12" executed="True" result="Success" success="True" time="0.0067" asserts="0" description=".\http.Steps.ps1: line 12">
+                <results>
+                  <test-case description="And http requests proxied through http://localhost:8888" name="Round trip is sound.And http requests proxied through http://localhost:8888" time="0.0067" asserts="0" success="True" result="Success" executed="True" />
+                </results>
+              </test-suite>
+              <test-suite type="ParameterizedTest" name="Round trip is sound..\http.Steps.ps1: line 40" executed="True" result="Success" success="True" time="0.1745" asserts="0" description=".\http.Steps.ps1: line 40">
+                <results>
+                  <test-case description="When request GET /first is made" name="Round trip is sound.When request GET /first is made" time="0.1745" asserts="0" success="True" result="Success" executed="True" />
+                </results>
+              </test-suite>
+              <test-suite type="ParameterizedTest" name="Round trip is sound..\http.Steps.ps1: line 48" executed="True" result="Success" success="True" time="2.2864" asserts="0" description=".\http.Steps.ps1: line 48">
+                <results>
+                  <test-case description="And outgoing request to /first intercepted" name="Round trip is sound.And outgoing request to /first intercepted" time="2.2864" asserts="0" success="True" result="Success" executed="True" />
+                </results>
+              </test-suite>
+              <test-suite type="ParameterizedTest" name="Round trip is sound..\http.Steps.ps1: line 56" executed="True" result="Success" success="True" time="0.0013" asserts="0" description=".\http.Steps.ps1: line 56">
+                <results>
+                  <test-case description="And test responds with &quot;responding from unit test&quot;" name="Round trip is sound.And test responds with &quot;responding from unit test&quot;" time="0.0013" asserts="0" success="True" result="Success" executed="True" />
+                </results>
+              </test-suite>
+              <test-suite type="ParameterizedTest" name="Round trip is sound..\http.Steps.ps1: line 6" executed="True" result="Success" success="True" time="0.0013" asserts="0" description=".\http.Steps.ps1: line 6">
+                <results>
+                  <test-case description="And proxy client is connected to http://localhost:6000" name="Round trip is sound.And proxy client is connected to http://localhost:6000" time="0.0013" asserts="0" success="True" result="Success" executed="True" />
+                </results>
+              </test-suite>
+              <test-suite type="ParameterizedTest" name="Round trip is sound..\http.Steps.ps1: line 63" executed="True" result="Success" success="True" time="0.02" asserts="0" description=".\http.Steps.ps1: line 63">
+                <results>
+                  <test-case description="Then response body is &quot;responding from unit test&quot;" name="Round trip is sound.Then response body is &quot;responding from unit test&quot;" time="0.02" asserts="0" success="True" result="Success" executed="True" />
+                </results>
+              </test-suite>
+            </results>
+          </test-suite>
+          <test-suite type="TestFixture" name="test responds with json" executed="True" result="Success" success="True" time="0" asserts="0" description="test responds with json">
+            <results>
+              <test-suite type="ParameterizedTest" name="test responds with json..\http.Steps.ps1: line 1" executed="True" result="Success" success="True" time="0.0001" asserts="0" description=".\http.Steps.ps1: line 1">
+                <results>
+                  <test-case description="Given service is running on http://local.host:5000 base address" name="test responds with json.Given service is running on http://local.host:5000 base address" time="0.0001" asserts="0" success="True" result="Success" executed="True" />
+                </results>
+              </test-suite>
+              <test-suite type="ParameterizedTest" name="test responds with json..\http.Steps.ps1: line 12" executed="True" result="Success" success="True" time="0.0001" asserts="0" description=".\http.Steps.ps1: line 12">
+                <results>
+                  <test-case description="And http requests proxied through http://localhost:8888" name="test responds with json.And http requests proxied through http://localhost:8888" time="0.0001" asserts="0" success="True" result="Success" executed="True" />
+                </results>
+              </test-suite>
+              <test-suite type="ParameterizedTest" name="test responds with json..\http.Steps.ps1: line 48" executed="True" result="Success" success="True" time="2.2708" asserts="0" description=".\http.Steps.ps1: line 48">
+                <results>
+                  <test-case description="And outgoing request to /json intercepted" name="test responds with json.And outgoing request to /json intercepted" time="2.2708" asserts="0" success="True" result="Success" executed="True" />
+                </results>
+              </test-suite>
+              <test-suite type="ParameterizedTest" name="test responds with json..\http.Steps.ps1: line 6" executed="True" result="Success" success="True" time="0.0003" asserts="0" description=".\http.Steps.ps1: line 6">
+                <results>
+                  <test-case description="And proxy client is connected to http://localhost:6000" name="test responds with json.And proxy client is connected to http://localhost:6000" time="0.0003" asserts="0" success="True" result="Success" executed="True" />
+                </results>
+              </test-suite>
+              <test-suite type="ParameterizedTest" name="test responds with json..\http.Steps.ps1: line 70" executed="True" result="Success" success="True" time="0.2032" asserts="0" description=".\http.Steps.ps1: line 70">
+                <results>
+                  <test-case description="When request POST /json is made with the following data and application/json content type..." name="test responds with json.When request POST /json is made with the following data and application/json content type..." time="0.2032" asserts="0" success="True" result="Success" executed="True" />
+                </results>
+              </test-suite>
+              <test-suite type="ParameterizedTest" name="test responds with json..\http.Steps.ps1: line 78" executed="True" result="Success" success="True" time="0.0015" asserts="0" description=".\http.Steps.ps1: line 78">
+                <results>
+                  <test-case description="Then requested method is POST" name="test responds with json.Then requested method is POST" time="0.0015" asserts="0" success="True" result="Success" executed="True" />
+                </results>
+              </test-suite>
+              <test-suite type="ParameterizedTest" name="test responds with json..\http.Steps.ps1: line 84" executed="True" result="Success" success="True" time="0.0025" asserts="0" description=".\http.Steps.ps1: line 84">
+                <results>
+                  <test-case description="And sent object is like..." name="test responds with json.And sent object is like..." time="0.0025" asserts="0" success="True" result="Success" executed="True" />
+                </results>
+              </test-suite>
+            </results>
+          </test-suite>
+        </results>
+      </test-suite>
+    </results>
+  </test-suite>
+</test-results>
