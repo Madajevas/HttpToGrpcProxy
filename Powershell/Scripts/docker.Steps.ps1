@@ -1,9 +1,19 @@
 BeforeEachScenario {
-    # docker compose -f ..\..\DockerComposeTests\docker-compose-services.yml -f ..\..\DockerComposeTests\docker-compose-proxy.yml build
-    docker compose -f ..\..\DockerComposeTests\docker-compose-services.yml -f ..\..\DockerComposeTests\docker-compose-proxy.yml up -d | Out-Null
+    return;
+    $location = Get-Location
+
+    try {
+        # TODO: normal location
+        cd ../..
+        docker build -f ./HttpToGrpcProxy/Dockerfile -t proxy .
+    } finally {
+        Set-Location $location
+    }
+
+    docker run -d -p 5000:5000 -p 6000:6000 --name proxy proxy
 
     While ($true) {
-        $logs = docker compose -f ..\..\DockerComposeTests\docker-compose-services.yml -f ..\..\DockerComposeTests\docker-compose-proxy.yml logs proxy
+        $logs = docker container logs proxy
 
         if ($logs -match 'Now listening on:') {
             break;
@@ -12,5 +22,5 @@ BeforeEachScenario {
 }
 
 AfterEachScenario {
-    docker compose -f ..\..\DockerComposeTests\docker-compose-services.yml -f ..\..\DockerComposeTests\docker-compose-proxy.yml down | Out-Null
+    docker container rm -f proxy
 }
