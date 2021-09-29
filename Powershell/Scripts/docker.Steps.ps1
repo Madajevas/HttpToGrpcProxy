@@ -1,11 +1,10 @@
 BeforeEachScenario {
-    return;
     $location = Get-Location
 
     try {
         # TODO: normal location
         cd ../..
-        docker build -f ./HttpToGrpcProxy/Dockerfile -t proxy .
+        # docker build -f ./HttpToGrpcProxy/Dockerfile -t proxy .
     } finally {
         Set-Location $location
     }
