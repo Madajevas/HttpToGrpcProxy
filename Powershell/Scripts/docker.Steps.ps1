@@ -9,7 +9,7 @@ BeforeEachScenario {
         Set-Location $location
     }
 
-    docker run -d -p 5000:5000 -p 6000:6000 --name proxy proxy
+    docker run -d -p 5000:5000 -p 6000:6000 --name proxy proxy | Out-Null
 
     While ($true) {
         $logs = docker container logs proxy
@@ -21,5 +21,5 @@ BeforeEachScenario {
 }
 
 AfterEachScenario {
-    docker container rm -f proxy
+    docker container rm -f proxy | Out-Null
 }
