@@ -11,7 +11,7 @@ Given 'proxy client is connected to (?<Address>.*)' {
 
 Function Global:Invoke-RestMethodAsync {
     param($Uri, $Method, $Body)
-    
+
     $invokeArgs = @{
         Uri = $Uri
         Method = $Method
@@ -23,7 +23,7 @@ Function Global:Invoke-RestMethodAsync {
     }
 
     Start-Job -ScriptBlock {
-        $input.MoveNext()
+        $input.MoveNext() | Out-Null
         $args = $input.Current
 
         Invoke-RestMethod @args -Proxy http://localhost:8888
