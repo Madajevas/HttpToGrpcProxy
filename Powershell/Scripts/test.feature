@@ -15,7 +15,7 @@ Scenario: test responds with json
     | name        | value | date                |
     | integration | tests | 2021-09-29 21:29:00 |
     And outgoing request to /json intercepted
-    # Then requested method is POST
+    Then requested method is POST
     And sent object is like
     | name        | value | date                |
     | integration | tests | 2021-09-29 21:29:00 |

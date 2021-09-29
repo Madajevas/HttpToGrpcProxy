@@ -69,6 +69,12 @@ When 'request (?<Method>(POST|PUT|PATCH)) (?<Path>/.*) is made with the followin
     $global:responsePromise = Invoke-RestMethodAsync -Uri $uri -Method $Method -ContentType $ContentType -Body $Table
 }
 
+When 'requested method is (?<Method>(POST|PUT|PATCH))' {
+    param($Method)
+
+    $Global:interceptedRequestContext.Method | Should -Be $Method
+}
+
 When 'sent object is like' {
     param($Table)
 
