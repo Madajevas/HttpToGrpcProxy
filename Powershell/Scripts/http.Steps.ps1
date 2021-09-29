@@ -9,20 +9,33 @@ Given 'proxy client is connected to (?<Address>.*)' {
     $Script:client = Get-Client -ProxyAddress $Address
 }
 
+Function Global:Invoke-RestMethodAsync {
+    param($Uri, $Method, $Body)
+    
+    $invokeArgs = @{
+        Uri = $Uri
+        Method = $Method
+    }
+
+    if ($Method -match "(POST|PUT|PATCH)"){
+        # TODO: other types
+        $invokeArgs.Body = ConvertTo-Json $Body
+    }
+
+    Start-Job -ScriptBlock {
+        $input.MoveNext()
+        $args = $input.Current
+
+        Invoke-RestMethod @args -Proxy http://localhost:8888
+    } -InputObject $invokeArgs
+}
+
 Given 'request (?<Method>(GET|POST|PATCH|DELETE)) (?<Path>/.*) is made' {
     param([string]$Method, [string]$Path)
     $uri = $Script:baseAddress + $Path
 
-    $global:responsePromise = Start-Job `
-        -ScriptBlock {
-            $url =  $input.Uri
-            $method = "GET"
-
-            Invoke-RestMethod `
-                -Method $method `
-                -Uri $url
-        } `
-        -InputObject @{ Uri = $uri; Method = $Method }
+    # TODO: maybe there is better way when usage of global
+    $global:responsePromise = Invoke-RestMethodAsync -Uri $uri -Method $Method
 }
 
 When 'outgoing request to (?<Path>/.*) intercepted' {
@@ -45,4 +58,10 @@ Then 'response body is "(?<Body>.*)"' {
     $response = $global:responsePromise | Receive-Job -Wait
 
     $response | Should -Be $Body
+}
+
+When 'request (?<Method>(POST|PUT|PATCH)) (?<Path>/.*) is made with the following data and (?<ContentType>.*) content type' {
+    param($Method, $Path, $ContentType, $Data)
+
+
 }
