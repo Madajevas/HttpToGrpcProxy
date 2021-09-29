@@ -10,14 +10,15 @@ Given 'proxy client is connected to (?<Address>.*)' {
 }
 
 Function Global:Invoke-RestMethodAsync {
-    param($Uri, $Method, $Body)
+    param($Uri, $Method, $Body, $ContentType)
 
     $invokeArgs = @{
         Uri = $Uri
         Method = $Method
+        ContentType = $ContentType
     }
 
-    if ($Method -match "(POST|PUT|PATCH)"){
+    if ($Method -match "(POST|PUT|PATCH)") {
         # TODO: other types
         $invokeArgs.Body = ConvertTo-Json $Body
     }
@@ -41,16 +42,16 @@ Given 'request (?<Method>(GET|POST|PATCH|DELETE)) (?<Path>/.*) is made' {
 When 'outgoing request to (?<Path>/.*) intercepted' {
     param([string]$Path)
 
-    $Script:interceptedRequestContext = Get-InterceptedRequest -Route $Path -Proxy $Script:client
+    $Global:interceptedRequestContext = Get-InterceptedRequest -Route $Path -Proxy $Script:client
 
-    $Script:interceptedRequestContext.Route | Should -Be 'first'
+    $Global:interceptedRequestContext.Route | Should -Be $Path.Trim('/')
 }
 
 And 'test responds with "(?<Body>.*)"' {
     param([string]$Body)
     $response = @{ Body = $Body; ContentType = "text/plain" }
 
-    $Script:interceptedRequestContext.Respond($response)
+    $Global:interceptedRequestContext.Respond($response)
 }
 
 Then 'response body is "(?<Body>.*)"' {
@@ -61,7 +62,29 @@ Then 'response body is "(?<Body>.*)"' {
 }
 
 When 'request (?<Method>(POST|PUT|PATCH)) (?<Path>/.*) is made with the following data and (?<ContentType>.*) content type' {
-    param($Method, $Path, $ContentType, $Data)
+    param($Method, $Path, $ContentType, $Table)
+    # TODO: build url in single location
+    $uri = $Script:baseAddress + $Path
 
+    $global:responsePromise = Invoke-RestMethodAsync -Uri $uri -Method $Method -ContentType $ContentType -Body $Table
+}
 
+When 'sent object is like' {
+    param($Table)
+
+    # TODO: other types
+    $requestData = $Global:interceptedRequestContext.Body | ConvertFrom-Json
+
+    $propertiesToAssert = Get-Member -InputObject $Table -MemberType Properties
+
+    ForEach ($property in $Table.Keys)
+    {
+        $requestData.$property | Should -Be $Table.$property
+    }
+}
+
+Function global:Debug-Object {
+    param($InputObject)
+
+    Write-Host ($InputObject | ConvertTo-Json)
 }
