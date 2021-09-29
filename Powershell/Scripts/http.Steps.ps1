@@ -23,11 +23,6 @@ Given 'request (?<Method>(GET|POST|PATCH|DELETE)) (?<Path>/.*) is made' {
                 -Uri $url
         } `
         -InputObject @{ Uri = $uri; Method = $Method }
-
-    # $a = $Script:responsePromise | Receive-Job -Wait
-    # Write-Host $a
-    # $Script:responsePromise | Remove-Job -Force
-    # Start-Sleep -Seconds 5
 }
 
 When 'outgoing request to (?<Path>/.*) intercepted' {
@@ -38,17 +33,16 @@ When 'outgoing request to (?<Path>/.*) intercepted' {
     $Script:interceptedRequestContext.Route | Should -Be 'first'
 }
 
-And 'respond with' {
-    $response = @{ Body = "responding from unit test"; ContentType = "text/plain" }
+And 'test responds with "(?<Body>.*)"' {
+    param([string]$Body)
+    $response = @{ Body = $Body; ContentType = "text/plain" }
 
     $Script:interceptedRequestContext.Respond($response)
 }
 
-Then 'response status code is (?<StatusCode>\d+)' {
-    param([int]$StatusCode)
-    Write-Host "*****************************"
+Then 'response body is "(?<Body>.*)"' {
+    param([string]$Body)
     $response = $global:responsePromise | Receive-Job -Wait
-    Write-Host (ConvertTo-Json $response )
 
-    $response | Should -Be "responding from unit test"
+    $response | Should -Be $Body
 }
